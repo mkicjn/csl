@@ -1,5 +1,6 @@
 #ifndef LISP_H
 #define LISP_H
+#define CASE_INSENSITIVE
 #include <stdlib.h>
 // Type definitions
 typedef enum {false,true} bool;
@@ -19,7 +20,7 @@ obj_t *new_obj(type_t type,long car,long cdr)
 	obj->cdr=cdr;
 	obj->refs=0;
 }
-void dec_rc(obj_t *);
+obj_t *dec_rc(obj_t *);
 void destroy(obj_t *obj)
 {
 	switch (obj->type) {
@@ -41,21 +42,23 @@ void rcdestroy(obj_t *obj)
 	if (obj->refs==0)
 		destroy(obj);
 }
-void inc_rc(obj_t *obj)
+obj_t *inc_rc(obj_t *obj)
 {
 	if (0xff>(long)obj)
-		return;
+		return obj;
 	if (obj->refs>=0)
 		obj->refs++;
+	return obj;
 }
-void dec_rc(obj_t *obj)
+obj_t *dec_rc(obj_t *obj)
 {
 	if (0xff>(long)obj)
-		return;
+		return obj;
 	if (obj->refs>0)
 		obj->refs--;
 	if (obj->refs==0)
 		destroy(obj);
+	return obj;
 }
 // Constants
 #define CONSTANT(x) {	\
@@ -84,7 +87,7 @@ core(CDR,1) cdr(obj_t *obj)
 		return (obj_t *)obj->cdr;
 	return NIL;
 }
-core(CONS,2) cons(obj_t *obj1,obj_t *obj2)
+core(CONS,2) cons(obj_t *obj2,obj_t *obj1)
 {
 	inc_rc(obj1);
 	inc_rc(obj2);
@@ -135,5 +138,23 @@ void print_cell(obj_t *obj)
 core(TERPRI,0) terpri() {
 	putchar('\n');
 	return NIL;
+}
+core(EQ,2) eq(obj_t *obj1,obj_t *obj2)
+{
+	if (obj1==obj2)
+		return T;
+	if (obj1->type!=obj2->type)
+		return NIL;
+	switch (obj1->type) {
+	case CELL:
+		return NIL;
+	case SYMBOL:
+		return strcasecmp((char *)obj1->car,(char *)obj2->car)?NIL:T;
+	case INTEGER:
+	case DOUBLE:
+		return obj1->car==obj2->car ? T : NIL;
+	case FUNCTION:
+		return NIL;
+	}
 }
 #endif

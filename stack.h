@@ -6,6 +6,7 @@ static obj_t *lisp_stack[STACK_SIZE];
 static int stack_index=0;
 void push(obj_t *obj)
 {
+	inc_rc(obj);
 	lisp_stack[stack_index++]=obj;
 }
 obj_t *pop()
@@ -18,7 +19,7 @@ void swap()
 	lisp_stack[stack_index-2]=lisp_stack[stack_index-1];
 	lisp_stack[stack_index-1]=o;
 }
-void drop()
+extern inline void drop()
 {
 	dec_rc(pop());
 }

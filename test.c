@@ -24,5 +24,13 @@ int main(int argc,char **argv)
 	s_print();
 	drop();
 	terpri();
+	/*
+	push(new_obj(INTEGER,1,0));
+	dup();
+	s_eq();
+	s_print();
+	drop();
+	terpri();
+	*/
 	return 0;
 }
