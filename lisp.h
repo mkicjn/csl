@@ -23,17 +23,17 @@ void dec_rc(obj_t *);
 void destroy(obj_t *obj)
 {
 	switch (obj->type) {
-		case SYMBOL:
-		case FUNCTION:
-			free((void *)obj->car);
-		case DOUBLE:
-		case INTEGER:
-			free(obj);
-			break;
-		case CELL:
-			dec_rc((obj_t *)obj->car);
-			dec_rc((obj_t *)obj->cdr);
-			free(obj);
+	case SYMBOL:
+	case FUNCTION:
+		free((void *)obj->car);
+	case DOUBLE:
+	case INTEGER:
+		free(obj);
+		break;
+	case CELL:
+		dec_rc((obj_t *)obj->car);
+		dec_rc((obj_t *)obj->cdr);
+		free(obj);
 	}
 }
 void rcdestroy(obj_t *obj)
@@ -94,23 +94,23 @@ void print_cell(obj_t *);
 core(PRINT,1) print(obj_t *obj)
 {
 	switch (obj->type) {
-		case CELL:
-			print_cell(obj);
-			break;
-		case SYMBOL:
-			printf("%s",(char *)obj->car);
-			break;
-		case INTEGER:
-			printf("%ld",obj->car);
-			break;
-		case FUNCTION:
-			printf("{FUNCTION 0x%x}",obj);
-			break;
-		case DOUBLE:
-			printf("%f",(double)obj->car);
-			break;
-		default:
-			printf("{ERROR}");
+	case CELL:
+		print_cell(obj);
+		break;
+	case SYMBOL:
+		printf("%s",(char *)obj->car);
+		break;
+	case INTEGER:
+		printf("%ld",obj->car);
+		break;
+	case FUNCTION:
+		printf("{FUNCTION 0x%x}",obj);
+		break;
+	case DOUBLE:
+		printf("%f",(double)obj->car);
+		break;
+	default:
+		printf("{ERROR}");
 	}
 	return obj;
 }
