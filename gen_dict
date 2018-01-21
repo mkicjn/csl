@@ -1,22 +1,31 @@
 #!/usr/bin/perl
 use strict;
 open(my $dict,">",'dict.h');
-print $dict "#ifndef DICTIONARY_H\
+print "#ifndef DICTIONARY_H\
 #define DICTIONARY_H\
 #include \"stack.h\"\n";
+sub anum {
+	my ($bound,$block)=@_;
+	my $i=1;
+	for ('a'..'aaa') {
+		&$block($_,$i,$bound);
+		last if (++$i>$bound);
+	}
+}
 for (@ARGV) {
-	print $dict "#include \"$_\"\n";
+	print "#include \"$_\"\n";
 	open(my $file,'<',$_) or die "$_ does not exist\n";
 	while (my $line = <$file>) {
-		$line=~/core\((.*),([0-9]+)\) ([^(]+)/ or next;
-		print $dict "void s_",lc $1,"() {push($3(";
-		for (1..$2) {
-			print $dict "pop()";
-			print $dict "," if ($_<$2);
-		}
-		print $dict "));}\n";
+		my ($lname,$argc,$cname)=($line=~/core\((.*),([0-9]+)\) ([^(]+)/g) or next;
+		print "void s_",lc $lname,"() {\n";
+		&anum($argc,sub{print "\tobj_t *$_[0]=pop();\n"});
+		print "\tpush($cname(";
+		&anum($argc,sub{print $_[0]; print ',' if ($_[1]<$_[2])});
+		print "));\n";
+		&anum($argc,sub{print "\tdec_rc($_[0]);\n"});
+		print "}\n";
 	}
 	close($file);
 }
-print $dict "#endif\n";
+print "#endif\n";
 close($dict);
