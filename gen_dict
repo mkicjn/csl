@@ -1,31 +1,27 @@
 #!/usr/bin/perl
 use strict;
 open(my $dict,">",'dict.h');
-print "#ifndef DICTIONARY_H\
+print $dict "#ifndef DICTIONARY_H\
 #define DICTIONARY_H\
 #include \"stack.h\"\n";
-sub anum {
-	my ($bound,$block)=@_;
-	my $i=1;
-	for ('a'..'aaa') {
-		&$block($_,$i,$bound);
-		last if (++$i>$bound);
-	}
-}
+my @alphabet=('a'..'z');
 for (@ARGV) {
-	print "#include \"$_\"\n";
+	print $dict "#include \"$_\"\n";
 	open(my $file,'<',$_) or die "$_ does not exist\n";
 	while (my $line = <$file>) {
 		my ($lname,$argc,$cname)=($line=~/core\((.*),([0-9]+)\) ([^(]+)/g) or next;
-		print "void s_",lc $lname,"() {\n";
-		&anum($argc,sub{print "\tobj_t *$_[0]=pop();\n"});
-		print "\tpush($cname(";
-		&anum($argc,sub{print $_[0]; print ',' if ($_[1]<$_[2])});
-		print "));\n";
-		&anum($argc,sub{print "\tdec_rc($_[0]);\n"});
-		print "}\n";
+		print $dict "void s_",lc $lname,"() {\n";
+		print $dict "\tobj_t *$_=pop();\n" for (@alphabet[0..$argc-1]);
+		print $dict "\tpush($cname(";
+		for (0..$argc-1) {
+			print $dict $alphabet[$argc-1-$_];
+			print $dict ',' if ($_<$argc-1);
+		}
+		print $dict "));\n";
+		print $dict "\tdec_rc($alphabet[$argc-1-$_]);\n" for (0..$argc-1);
+		print $dict "}\n";
 	}
 	close($file);
 }
-print "#endif\n";
+print $dict "#endif\n";
 close($dict);

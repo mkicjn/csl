@@ -15,9 +15,9 @@ void s_cdr() {
 void s_cons() {
 	obj_t *a=pop();
 	obj_t *b=pop();
-	push(cons(a,b));
-	dec_rc(a);
+	push(cons(b,a));
 	dec_rc(b);
+	dec_rc(a);
 }
 void s_print() {
 	obj_t *a=pop();
@@ -25,15 +25,13 @@ void s_print() {
 	dec_rc(a);
 }
 void s_terpri() {
-	obj_t *a=pop();
-	push(terpri(a));
-	dec_rc(a);
+	push(terpri());
 }
 void s_eq() {
 	obj_t *a=pop();
 	obj_t *b=pop();
-	push(eq(a,b));
-	dec_rc(a);
+	push(eq(b,a));
 	dec_rc(b);
+	dec_rc(a);
 }
 #endif
