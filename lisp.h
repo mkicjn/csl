@@ -29,7 +29,7 @@ obj_t *new_obj(type_t type,long car,long cdr)
 	obj->refs=0;
 	return obj;
 }
-obj_t *dec_rc(obj_t *);
+void dec_rc(obj_t *);
 void destroy(obj_t *obj)
 {
 	switch (obj->type) {
@@ -51,23 +51,21 @@ void rcdestroy(obj_t *obj)
 	if (obj->refs==0)
 		destroy(obj);
 }
-obj_t *inc_rc(obj_t *obj)
+void inc_rc(obj_t *obj)
 {
 	if (0xff>(long)obj)
-		return obj;
+		return;
 	if (obj->refs>=0)
 		obj->refs++;
-	return obj;
 }
-obj_t *dec_rc(obj_t *obj)
+void dec_rc(obj_t *obj)
 {
 	if (0xff>(long)obj)
-		return obj;
+		return;
 	if (obj->refs>0)
 		obj->refs--;
 	if (obj->refs==0)
 		destroy(obj);
-	return obj;
 }
 // Constants
 #define CONSTANT(x) {	\
