@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lisp.h"
+#include "reader.h"
 #include "stack.h"
 #include "dict.h"
 static void push_symbol(const char *str)
@@ -11,41 +12,9 @@ static void push_symbol(const char *str)
 }
 int main(int argc,char **argv)
 {
-	/*
-	push_symbol("x");
-	push_symbol("y");
-	s_cons();
-	dup();
-	s_car();
-	over();
-	s_cdr();
-	push(NIL);
-	s_cons();
-	s_cons();
-	push(NIL);
-	s_cons();
-	s_cons();
-	s_print();
-	drop();
-	terpri();
-	*/
-	/*
-	push(new_obj(INTEGER,1,0));
-	dup();
-	s_eq();
-	s_print();
-	drop();
-	terpri();
-	*/
-	push_symbol("x");
-	push_symbol("y");
-	push(NIL);
-	s_cons();
-	s_cons();
-	push_symbol("a");
-	s_rplacd();
-	s_print();
-	drop();
-	terpri();
+	char str[200];
+	fgets(str,200,stdin);
+	str[strlen(str)-1]='\0';
+	printf("%s\n",types[infer_type(str)]);
 	return 0;
 }

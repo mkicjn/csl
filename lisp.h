@@ -12,7 +12,15 @@
 #include <stdlib.h>
 // Type definitions
 typedef enum {false,true} bool;
-typedef enum {CELL,SYMBOL,INTEGER,FUNCTION,DOUBLE} type_t;
+typedef enum {CELL,SYMBOL,INTEGER,FUNCTION,DOUBLE,ERROR} type_t;
+const char *types[6]={
+	"CELL",
+	"SYMBOL",
+	"INTEGER",
+	"FUNCTION",
+	"DOUBLE",
+	"ERROR"
+};
 typedef struct {
 	type_t type;
 	long car,cdr;
