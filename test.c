@@ -4,11 +4,16 @@
 #include "lisp.h"
 #include "stack.h"
 #include "dict.h"
+static void push_symbol(const char *str)
+{
+	int len=strlen(str)+1;
+	push(new_obj(SYMBOL,(long)strcpy(calloc(len,1),str),len));
+}
 int main(int argc,char **argv)
 {
 	/*
-	push(new_obj(SYMBOL,(long)strcpy(calloc(8,1),"x"),8));
-	push(new_obj(SYMBOL,(long)strcpy(calloc(8,1),"y"),8));
+	push_symbol("x");
+	push_symbol("y");
 	s_cons();
 	dup();
 	s_car();
@@ -32,9 +37,27 @@ int main(int argc,char **argv)
 	drop();
 	terpri();
 	*/
-	push(new_obj(SYMBOL,(long)strcpy(calloc(8,1),"x"),8));
+	push_symbol("x");
+	push_symbol("y");
+	push(NIL);
+	s_cons();
+	s_cons();
 	dup();
-	push(new_obj(SYMBOL,(long)strcpy(calloc(8,1),"y"),8));
+	s_car();
+	push_symbol("a");
+	s_set();
+	drop();
+	s_print();
+	drop();
+	terpri();
+	push_symbol("x");
+	push_symbol("y");
+	push(NIL);
+	s_cons();
+	s_cons();
+	dup();
+	s_cdr();
+	push_symbol("a");
 	s_set();
 	drop();
 	s_print();

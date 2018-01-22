@@ -168,6 +168,8 @@ core(EQ,2) eq(obj_t *obj1,obj_t *obj2)
 }
 core(SET,2) set(obj_t *obj1,obj_t *obj2)
 {
+	if (obj1->refs<0)
+		return NIL;
 	// Free memory from old contents if appropriate
 	switch (obj1->type) {
 	case CELL:
