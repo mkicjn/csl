@@ -27,6 +27,7 @@ obj_t *new_obj(type_t type,long car,long cdr)
 	obj->car=car;
 	obj->cdr=cdr;
 	obj->refs=0;
+	return obj;
 }
 obj_t *dec_rc(obj_t *);
 void destroy(obj_t *obj)
@@ -115,7 +116,7 @@ core(PRINT,1) print(obj_t *obj)
 		printf("%ld",obj->car);
 		break;
 	case FUNCTION:
-		printf("{FUNCTION 0x%x}",obj);
+		printf("{FUNCTION 0x%lx}",(long)obj);
 		break;
 	case DOUBLE:
 		printf("%f",(double)obj->car);
@@ -178,6 +179,8 @@ core(SET,2) set(obj_t *obj1,obj_t *obj2)
 	case FUNCTION:
 	case SYMBOL:
 		free((void *)obj1->car);
+	default:
+		break;
 	}
 	// Prepare new memory areas if appropriate
 	long size=obj2->cdr;
