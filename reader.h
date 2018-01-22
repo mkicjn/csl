@@ -36,4 +36,12 @@ type_t infer_type(char *s)
 	}
 	return d?DOUBLE:INTEGER;
 }
+char *captok(char *s)
+{
+	for (;*s&&*s==' '||*s=='\t';s++); // Skip whitespace
+	register int c=0;
+	for (;s[c]&&s[c]!=' '&&s[c]!='\t';c++); // Skip non-whitespace
+	char *t=calloc(c+1,1);
+	return memcpy(t,s,c);
+}
 #endif
