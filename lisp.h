@@ -200,4 +200,14 @@ core(SET,2) set(obj_t *obj1,obj_t *obj2)
 	obj1->cdr=obj2->cdr;
 	return obj1;
 }
+core(RPLACA,2) rplaca(obj_t *obj1,obj_t *obj2)
+{
+	set(car(obj1),obj2);
+	return obj1;
+}
+core(RPLACD,2) rplacd(obj_t *obj1,obj_t *obj2)
+{
+	set(cdr(obj1),obj2);
+	return obj1;
+}
 #endif
