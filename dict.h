@@ -34,4 +34,11 @@ void s_eq() {
 	dec_rc(b);
 	dec_rc(a);
 }
+void s_set() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(set(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
 #endif

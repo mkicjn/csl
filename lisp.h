@@ -151,8 +151,10 @@ core(EQ,2) eq(obj_t *obj1,obj_t *obj2)
 {
 	if (obj1==obj2)
 		return T;
+	// The addresses are not equal
 	if (obj1->type!=obj2->type)
 		return NIL;
+	// The types are equal
 	switch (obj1->type) {
 	case CELL:
 		return NIL;
@@ -160,9 +162,39 @@ core(EQ,2) eq(obj_t *obj1,obj_t *obj2)
 		return strcasecmp((char *)obj1->car,(char *)obj2->car)?NIL:T;
 	case INTEGER:
 	case DOUBLE:
-		return obj1->car==obj2->car ? T : NIL;
+		return obj1->car==obj2->car?T:NIL;
 	case FUNCTION:
 		return NIL;
 	}
+}
+core(SET,2) set(obj_t *obj1,obj_t *obj2)
+{
+	// Free memory from old contents if appropriate
+	switch (obj1->type) {
+	case CELL:
+		dec_rc((obj_t *)obj1->car);
+		dec_rc((obj_t *)obj1->cdr);
+		break;
+	case FUNCTION:
+	case SYMBOL:
+		free((void *)obj1->car);
+	}
+	// Prepare new memory areas if appropriate
+	long size=obj2->cdr;
+	switch (obj2->type) {
+	case SYMBOL:
+	case FUNCTION:
+		obj1->car=(long)malloc(size);
+		memcpy((void *)obj1->car,(void *)obj2->car,size);
+		break;
+	case CELL:
+		inc_rc((obj_t *)obj2->car);
+		inc_rc((obj_t *)obj2->cdr);
+	default:
+		obj1->car=obj2->car;
+	}
+	obj1->type=obj2->type;
+	obj1->cdr=obj2->cdr;
+	return obj1;
 }
 #endif

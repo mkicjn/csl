@@ -6,10 +6,9 @@
 #include "dict.h"
 int main(int argc,char **argv)
 {
-	char *str1=strcpy(calloc(8,1),"x");
-	char *str2=strcpy(calloc(8,1),"y");
-	push(new_obj(SYMBOL,(long)str1,0));
-	push(new_obj(SYMBOL,(long)str2,0));
+	/*
+	push(new_obj(SYMBOL,(long)strcpy(calloc(8,1),"x"),8));
+	push(new_obj(SYMBOL,(long)strcpy(calloc(8,1),"y"),8));
 	s_cons();
 	dup();
 	s_car();
@@ -24,6 +23,7 @@ int main(int argc,char **argv)
 	s_print();
 	drop();
 	terpri();
+	*/
 	/*
 	push(new_obj(INTEGER,1,0));
 	dup();
@@ -32,5 +32,13 @@ int main(int argc,char **argv)
 	drop();
 	terpri();
 	*/
+	push(new_obj(SYMBOL,(long)strcpy(calloc(8,1),"x"),8));
+	dup();
+	push(new_obj(SYMBOL,(long)strcpy(calloc(8,1),"y"),8));
+	s_set();
+	drop();
+	s_print();
+	drop();
+	terpri();
 	return 0;
 }
