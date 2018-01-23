@@ -61,7 +61,7 @@ char *get_list(char *s)
 	}
 	return NULL;
 GET_LIST_RET:
-	return memcpy(calloc(c+1,1),s,c+1);
+	return memcpy(calloc(c+2,1),s,c+2);
 }
 char *get_token(char *s)
 {
@@ -98,6 +98,7 @@ obj_t *to_list(char *s)
 			continue;
 		}
 		push(q?quote(to_obj(tok)):to_obj(tok));
+		free(tok);
 		if (dot)
 			break;
 		s+=len+q;
@@ -119,18 +120,22 @@ obj_t *to_obj(char *s)
 	switch (infer_type(tok)) {
 	case CELL:
 		obj=to_list(tok);
+		free(tok);
 		break;
 	case SYMBOL:
 		obj=new_obj(SYMBOL,(long)tok,0);
 		break;
 	case INTEGER:
 		obj=new_obj(INTEGER,atol(tok),0);
+		free(tok);
 		break;
 	case DOUBLE:
 		obj=new_dobj(strtod(tok,NULL));
+		free(tok);
 		break;
 	default:
 		obj=NIL;
+		free(tok);
 	}
 	return q?quote(obj):obj;
 }
