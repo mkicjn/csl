@@ -55,4 +55,9 @@ void s_rplacd() {
 	dec_rc(b);
 	dec_rc(a);
 }
+void s_read() {
+	obj_t *a=pop();
+	push(oread(a));
+	dec_rc(a);
+}
 #endif

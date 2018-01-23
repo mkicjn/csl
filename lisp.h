@@ -239,13 +239,14 @@ core(RPLACD,2) rplacd(obj_t *obj1,obj_t *obj2)
 	return obj1;
 }
 extern obj_t *to_obj(char *);
-obj_t *lread(long n)
+obj_t *lread(long n) // lread - read(long)
 {
 	char str[n];
 	fgets(str,n,stdin);
+	str[strlen(str)-1]='\0';
 	return to_obj(str);
 }
-core(READ,1) oread(obj_t *obj1)
+core(READ,1) oread(obj_t *obj1) // oread - read(object)
 {
 	if (obj1->type!=INTEGER)
 		return NIL;
