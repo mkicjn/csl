@@ -95,6 +95,7 @@ obj_t *to_list(char *s)
 		int len=strlen(tok);
 		if (tok[0]=='.'&&!tok[1]) {
 			dot=true;
+			free(tok);
 			s++;
 			continue;
 		}
