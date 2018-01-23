@@ -95,6 +95,7 @@ obj_t *to_list(char *s)
 		int len=strlen(tok);
 		if (tok[0]=='.'&&!tok[1]) {
 			dot=true;
+			s++;
 			continue;
 		}
 		push(q?quote(to_obj(tok)):to_obj(tok));
@@ -123,7 +124,7 @@ obj_t *to_obj(char *s)
 		free(tok);
 		break;
 	case SYMBOL:
-		obj=new_obj(SYMBOL,(long)tok,0);
+		obj=new_obj(SYMBOL,(long)tok,strlen(tok));
 		break;
 	case INTEGER:
 		obj=new_obj(INTEGER,atol(tok),0);

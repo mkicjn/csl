@@ -60,4 +60,26 @@ void s_read() {
 	push(oread(a));
 	dec_rc(a);
 }
+void s_atom() {
+	obj_t *a=pop();
+	push(atom(a));
+	dec_rc(a);
+}
+void s_null() {
+	obj_t *a=pop();
+	push(null(a));
+	dec_rc(a);
+}
+void s_nconc() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(nconc(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+void s_copy() {
+	obj_t *a=pop();
+	push(copy(a));
+	dec_rc(a);
+}
 #endif

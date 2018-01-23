@@ -14,7 +14,7 @@ int main(int argc,char **argv)
 {
 	push(lread(200));
 	s_print();
-	drop();
 	terpri();
+	drop();
 	return 0;
 }
