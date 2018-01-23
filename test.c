@@ -15,8 +15,9 @@ int main(int argc,char **argv)
 	char str[200];
 	fgets(str,200,stdin);
 	str[strlen(str)-1]='\0';
-	char *str2=captok(str);
-	printf("%s - %s\n",str2,types[infer_type(str)]);
+	puts(str);
+	char *str2=get_token(str);
+	printf("%s - %s\n",str2,types[infer_type(str2)]);
 	free(str2);
 	return 0;
 }

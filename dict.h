@@ -41,4 +41,18 @@ void s_set() {
 	dec_rc(b);
 	dec_rc(a);
 }
+void s_rplaca() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(rplaca(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+void s_rplacd() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(rplacd(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
 #endif

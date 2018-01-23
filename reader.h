@@ -15,6 +15,8 @@ bool valid_list(char *s)
 }
 type_t infer_type(char *s)
 {
+	if (!s)
+		return ERROR;
 	bool quote=*s=='\'';
 	if (quote)
 		s++;
@@ -36,12 +38,37 @@ type_t infer_type(char *s)
 	}
 	return d?DOUBLE:INTEGER;
 }
-char *captok(char *s)
+char *get_word(char *s)
 {
-	for (;*s&&*s==' '||*s=='\t';s++); // Skip whitespace
 	register int c=0;
-	for (;s[c]&&s[c]!=' '&&s[c]!='\t';c++); // Skip non-whitespace
-	char *t=calloc(c+1,1);
-	return memcpy(t,s,c);
+	for (;s[c]&&s[c]!=' '&&s[c]!='\t';c++); // Count characters
+	return memcpy(calloc(c+1,1),s,c);
+}
+char *get_list(char *s)
+{
+	register int c=0,p=0;
+	for (;s[c];c++) { // Count parentheses
+		if (s[c]=='(')
+			p++;
+		else if (s[c]==')') {
+			p--;
+			if (!p) // Exit when balanced
+				goto GET_LIST_RET;
+		}
+	}
+	return NULL;
+GET_LIST_RET:
+	return memcpy(calloc(c+1,1),s,c+1);
+}
+char *get_token(char *s)
+{
+	if (!*s)
+		return NULL;
+	for (;*s&&*s==' '||*s=='\t';s++); // Skip whitespace
+	if (*s=='\'')
+		s++;
+	if (*s=='(')
+		return get_list(s);
+	return get_word(s);
 }
 #endif
