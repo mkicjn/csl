@@ -82,4 +82,11 @@ void s_copy() {
 	push(copy(a));
 	dec_rc(a);
 }
+void s_append() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(append(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
 #endif

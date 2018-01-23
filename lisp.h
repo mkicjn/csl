@@ -285,4 +285,8 @@ core(COPY,1) copy(obj_t *obj)
 		return set(c,obj);
 	}
 }
+core(APPEND,2) append(obj_t *obj1,obj_t *obj2)
+{
+	return nconc(copy(obj1),obj2);
+}
 #endif
