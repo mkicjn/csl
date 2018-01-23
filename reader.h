@@ -2,7 +2,7 @@
 #define READER_H
 #include <stdlib.h>
 #include "lisp.h"
-char *skip_white(char *s)
+char *ltrim(char *s)
 {
 	for (;*s==' '||*s=='\n'||*s=='\t';s++);
 	return s;
@@ -65,7 +65,7 @@ GET_LIST_RET:
 }
 char *get_token(char *s)
 {
-	for (;*s&&*s==' '||*s=='\t';s++); // Skip whitespace
+	s=ltrim(s);
 	if (!*s)
 		return NULL;
 	if (*s=='\'')
@@ -87,7 +87,7 @@ obj_t *to_list(char *s)
 	if (*s=='\'')
 		s++;
 	s++;
-	while (*s&&*(s=skip_white(s))!=')') {
+	while (*s&&*(s=ltrim(s))!=')') {
 		bool q=*s=='\'';
 		char *tok=get_token(s);
 		if (!tok)
