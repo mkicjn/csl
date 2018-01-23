@@ -64,7 +64,7 @@ char *get_list(char *s)
 	}
 	return NULL;
 GET_LIST_RET:
-	return memcpy(calloc(c+2,1),s,c+2);
+	return memcpy(calloc(c+2,1),s,c+1);
 }
 char *get_token(char *s)
 {
