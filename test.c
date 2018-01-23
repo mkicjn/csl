@@ -5,6 +5,7 @@
 #include "stack.h"
 #include "reader.h"
 #include "dict.h"
+#include "rpn.h"
 static void push_symbol(const char *str)
 {
 	int len=strlen(str)+1;
@@ -12,17 +13,7 @@ static void push_symbol(const char *str)
 }
 int main(int argc,char **argv)
 {
-	push(lread(200));
-	push(lread(200));
-	over();
-	over();
-	s_append();
-	s_print();
-	terpri();
-	drop();
-	s_print();
-	terpri();
-	drop();
+	push(rpn(lread(200)));
 	s_print();
 	terpri();
 	drop();

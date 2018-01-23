@@ -69,15 +69,13 @@ void inc_rc(obj_t *obj)
 {
 	if (0xff>(long)obj)
 		return;
-	if (obj->refs>=0)
-		obj->refs++;
+	obj->refs+=obj->refs>=0;
 }
 void dec_rc(obj_t *obj)
 {
 	if (0xff>(long)obj)
 		return;
-	if (obj->refs>0)
-		obj->refs--;
+	obj->refs-=obj->refs>0;
 	if (obj->refs==0)
 		destroy(obj);
 }

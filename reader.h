@@ -25,8 +25,11 @@ type_t infer_type(char *s)
 	s+=*s=='\''; // Skip apostrophe if quoted
 	if (*s=='(')
 		return valid_list(s)?CELL:ERROR;
-	if (*s=='-')
+	if (*s=='-') {
 		s++;
+		if (!*s)
+			return SYMBOL;
+	}
 	bool d=false;
 	for (;*s;s++) {
 		if (*s>='0'&&*s<='9')
