@@ -1,21 +1,24 @@
 #ifndef STACK_H
 #define STACK_H
 #define STACK_SIZE 1024
-#include "lisp.h"
-static obj_t *lisp_stack[STACK_SIZE];
+static void *lisp_stack[STACK_SIZE];
 static int stack_index=0;
-void push(obj_t *obj)
+void *stackitem(int n)
+{
+	return lisp_stack[stack_index-1-n];
+}
+void push(void *obj)
 {
 	inc_rc(obj);
 	lisp_stack[stack_index++]=obj;
 }
-obj_t *pop()
+void *pop()
 {
 	return lisp_stack[--stack_index];
 }
 void swap()
 {
-	obj_t *o=lisp_stack[stack_index-2];
+	void *o=lisp_stack[stack_index-2];
 	lisp_stack[stack_index-2]=lisp_stack[stack_index-1];
 	lisp_stack[stack_index-1]=o;
 }

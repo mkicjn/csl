@@ -2,6 +2,11 @@
 #define READER_H
 #include <stdlib.h>
 #include "lisp.h"
+char *skip_white(char *s)
+{
+	for (;*s==' '||*s=='\n'||*s=='\t';s++);
+	return s;
+}
 bool valid_list(char *s)
 {
 	int p=0;
@@ -17,9 +22,7 @@ type_t infer_type(char *s)
 {
 	if (!s)
 		return ERROR;
-	bool quote=*s=='\'';
-	if (quote)
-		s++;
+	s+=*s=='\''; // Skip apostrophe if quoted
 	if (*s=='(')
 		return valid_list(s)?CELL:ERROR;
 	if (*s=='-')
@@ -41,7 +44,7 @@ type_t infer_type(char *s)
 char *get_word(char *s)
 {
 	register int c=0;
-	for (;s[c]&&s[c]!=' '&&s[c]!='\t';c++); // Count characters
+	for (;s[c]&&s[c]!=' '&&s[c]!='\t'&&s[c]!=')';c++); // Count characters
 	return memcpy(calloc(c+1,1),s,c);
 }
 char *get_list(char *s)
@@ -62,13 +65,73 @@ GET_LIST_RET:
 }
 char *get_token(char *s)
 {
+	for (;*s&&*s==' '||*s=='\t';s++); // Skip whitespace
 	if (!*s)
 		return NULL;
-	for (;*s&&*s==' '||*s=='\t';s++); // Skip whitespace
 	if (*s=='\'')
 		s++;
 	if (*s=='(')
 		return get_list(s);
 	return get_word(s);
+}
+obj_t *quote(obj_t *obj)
+{
+	return cons(QUOTE,cons(obj,NIL));
+}
+obj_t *to_obj(char *);
+extern void s_cons();
+obj_t *to_list(char *s)
+{
+	push(NULL); // Marker for front of list
+	bool dot=false;
+	if (*s=='\'')
+		s++;
+	s++;
+	while (*s&&*(s=skip_white(s))!=')') {
+		bool q=*s=='\'';
+		char *tok=get_token(s);
+		if (!tok)
+			break;
+		int len=strlen(tok);
+		if (tok[0]=='.'&&!tok[1]) {
+			dot=true;
+			continue;
+		}
+		push(q?quote(to_obj(tok)):to_obj(tok));
+		if (dot)
+			break;
+		s+=len+q;
+	}
+	if (!dot)
+		push(NIL);
+	while (stackitem(1))
+		s_cons();
+	obj_t *list=pop();
+	pop(); // Get rid of NULL on stack
+	list->refs--;
+	return list;
+}
+obj_t *to_obj(char *s)
+{
+	obj_t *obj;
+	bool q=*s=='\'';
+	char *tok=get_token(s);
+	switch (infer_type(tok)) {
+	case CELL:
+		obj=to_list(tok);
+		break;
+	case SYMBOL:
+		obj=new_obj(SYMBOL,(long)tok,0);
+		break;
+	case INTEGER:
+		obj=new_obj(INTEGER,atol(tok),0);
+		break;
+	case DOUBLE:
+		obj=new_dobj(strtod(tok,NULL));
+		break;
+	default:
+		obj=NIL;
+	}
+	return q?quote(obj):obj;
 }
 #endif

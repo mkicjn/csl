@@ -26,6 +26,11 @@ typedef struct {
 	long car,cdr;
 	int refs;
 } obj_t;
+typedef struct {
+	type_t type;
+	double car,cdr;
+	int refs;
+} dobj_t; // To avoid typecasting double->long
 // Memory management
 #define new(x) malloc(sizeof(x));
 obj_t *new_obj(type_t type,long car,long cdr)
@@ -36,6 +41,15 @@ obj_t *new_obj(type_t type,long car,long cdr)
 	obj->cdr=cdr;
 	obj->refs=0;
 	return obj;
+}
+obj_t *new_dobj(double car)
+{	// This function exists to circumvent implicit typecasting
+	obj_t *obj=new(obj_t);
+	obj->type=DOUBLE;
+	((dobj_t *)obj)->car=car;
+	obj->cdr=0;
+	obj->refs=0;
+	return (obj_t *)obj;
 }
 void dec_rc(obj_t *);
 void destroy(obj_t *obj)
@@ -88,6 +102,8 @@ obj_t T_OBJ=CONSTANT(T);
 obj_t *T=&T_OBJ;
 obj_t SELF_OBJ=CONSTANT(@);
 obj_t *SELF=&SELF_OBJ;
+obj_t QUOTE_OBJ=CONSTANT(QUOTE);
+obj_t *QUOTE=&QUOTE_OBJ;
 // LISP core functions
 #define core(name,argc) obj_t * // Info for dictionary code generator
 core(CAR,1) car(obj_t *obj)
@@ -125,7 +141,7 @@ core(PRINT,1) print(obj_t *obj)
 		printf("{FUNCTION 0x%lx}",(long)obj);
 		break;
 	case DOUBLE:
-		printf("%f",(double)obj->car);
+		printf("%lf",((dobj_t *)obj)->car);
 		break;
 	default:
 		printf("{ERROR}");
@@ -166,7 +182,11 @@ core(EQ,2) eq(obj_t *obj1,obj_t *obj2)
 	case CELL:
 		return NIL;
 	case SYMBOL:
+#ifdef CASE_INSENSITIVE
 		return strcasecmp((char *)obj1->car,(char *)obj2->car)?NIL:T;
+#else
+		return strcmp((char *)obj1->car,(char *)obj2->car)?NIL:T;
+#endif
 	case INTEGER:
 	case DOUBLE:
 		return obj1->car==obj2->car?T:NIL;
@@ -217,5 +237,18 @@ core(RPLACD,2) rplacd(obj_t *obj1,obj_t *obj2)
 {
 	set(cdr(obj1),obj2);
 	return obj1;
+}
+extern obj_t *to_obj(char *);
+obj_t *lread(long n)
+{
+	char str[n];
+	fgets(str,n,stdin);
+	return to_obj(str);
+}
+core(READ,1) oread(obj_t *obj1)
+{
+	if (obj1->type!=INTEGER)
+		return NIL;
+	return lread(obj1->car);
 }
 #endif

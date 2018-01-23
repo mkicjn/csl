@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lisp.h"
-#include "reader.h"
 #include "stack.h"
+#include "reader.h"
 #include "dict.h"
 static void push_symbol(const char *str)
 {
@@ -15,9 +15,9 @@ int main(int argc,char **argv)
 	char str[200];
 	fgets(str,200,stdin);
 	str[strlen(str)-1]='\0';
-	puts(str);
-	char *str2=get_token(str);
-	printf("%s - %s\n",str2,types[infer_type(str2)]);
-	free(str2);
+	push(to_obj(str));
+	s_print();
+	drop();
+	terpri();
 	return 0;
 }
