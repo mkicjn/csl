@@ -162,5 +162,5 @@ obj_t assoc_sym=CONSTANT(ASSOC);
 obj_t assoc_fun=FUNCTION_OBJ(&s_assoc);
 obj_t assoc_def=CONS_OBJ(&assoc_sym,&assoc_fun);
 obj_t assoc_dcell=CONS_OBJ(&assoc_def,&append_dcell);
-const obj_t *DICT=&assoc_dcell;
+obj_t *DICT=&assoc_dcell;
 #endif

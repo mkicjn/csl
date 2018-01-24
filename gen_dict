@@ -1,10 +1,14 @@
 #!/usr/bin/perl
 use strict;
 open(my $dict,">",'dict.h');
-print $dict "#ifndef DICTIONARY_H\
+print $dict
+"#ifndef DICTIONARY_H\
 #define DICTIONARY_H\
-#include \"stack.h\"\n";
+#include \"stack.h\"\
+#define FUNCTION_OBJ(x) {.type=FUNCTION,.car=(long)x,.cdr=-1,.refs=-1}\
+#define CONS_OBJ(x,y) {.type=CELL,.car=(long)x,.cdr=(long)y,.refs=-1}\n";
 my @alphabet=('a'..'z');
+my $last='NIL_OBJ';
 for (@ARGV) {
 	print $dict "#include \"$_\"\n";
 	open(my $file,'<',$_) or die "$_ does not exist\n";
@@ -20,8 +24,14 @@ for (@ARGV) {
 		print $dict "));\n";
 		print $dict "\tdec_rc($alphabet[$argc-1-$_]);\n" for (0..$argc-1);
 		print $dict "}\n";
+		print $dict "obj_t ${cname}_sym=CONSTANT($lname);\n";
+		print $dict "obj_t ${cname}_fun=FUNCTION_OBJ(&s_",lc $lname,");\n";
+		print $dict "obj_t ${cname}_def=CONS_OBJ(&${cname}_sym,&${cname}_fun);\n";
+		print $dict "obj_t ${cname}_dcell=CONS_OBJ(&${cname}_def,&$last);\n";
+		$last="${cname}_dcell";
 	}
 	close($file);
 }
+print $dict "obj_t *DICT=&$last;\n";
 print $dict "#endif\n";
 close($dict);
