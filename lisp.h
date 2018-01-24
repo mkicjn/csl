@@ -96,6 +96,8 @@ obj_t *SELF=&SELF_OBJ;
 obj_t QUOTE_OBJ=CONSTANT(QUOTE);
 obj_t *QUOTE=&QUOTE_OBJ;
 obj_t *ENV=&NIL_OBJ;
+obj_t ARGS=CONSTANT({ARGS});
+obj_t CALL=CONSTANT({CALL});
 // LISP core functions
 #define core(name,argc) obj_t * // Info for dictionary code generator
 core(CAR,1) car(obj_t *obj)
@@ -259,7 +261,7 @@ core(NULL,1) null(obj_t *obj)
 }
 core(NCONC,2) nconc(obj_t *obj1,obj_t *obj2)
 {
-	if (obj1->refs<0)
+	if (obj1->type!=CELL)
 		return NIL;
 	obj_t *o=obj1;
 	for (;cdr(o)->type==CELL;o=(obj_t *)o->cdr);

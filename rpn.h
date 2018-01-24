@@ -14,9 +14,11 @@ obj_t *rpnh(obj_t *form)
 	if (form->type!=CELL)
 		return cons(form,NIL);
 	push(NULL);
+	push(cons(&ARGS,NIL));
 	for (obj_t *o=cdr(form);o!=NIL;o=cdr(o))
 		push(rpnh(car(o)));
 	push(rpnh(car(form)));
+	push(cons(&CALL,NIL));
 	while (stackitem(1))
 		s_nconc();
 	obj_t *r=pop();
