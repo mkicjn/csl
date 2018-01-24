@@ -89,4 +89,11 @@ void s_append() {
 	dec_rc(b);
 	dec_rc(a);
 }
+void s_assoc() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(assoc(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
 #endif

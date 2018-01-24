@@ -13,7 +13,10 @@ static void push_symbol(const char *str)
 }
 int main(int argc,char **argv)
 {
-	push(rpn(lread(200)));
+	push(lread(200));
+	push(lread(200));
+	swap();
+	s_assoc();
 	s_print();
 	terpri();
 	drop();

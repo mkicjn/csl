@@ -287,4 +287,11 @@ core(APPEND,2) append(obj_t *obj1,obj_t *obj2)
 {
 	return nconc(copy(obj1),obj2);
 }
+core(ASSOC,2) assoc(obj_t *sym,obj_t *list)
+{
+	for (obj_t *o=list;o!=NIL;o=cdr(o))
+		if (eq(sym,car(car(o)))==T)
+			return car(o);
+	return NIL;
+}
 #endif
