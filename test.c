@@ -14,10 +14,8 @@ static void push_symbol(const char *str)
 int main(int argc,char **argv)
 {
 	push(lread(200));
-	push(lread(200));
-	s_declare();
+	s_print();
 	drop();
-	print(DICT);
 	terpri();
 	l_exit();
 }

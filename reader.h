@@ -79,6 +79,8 @@ char *get_token(char *s)
 }
 obj_t *quote(obj_t *obj)
 {
+	if (obj==NIL||obj==T||obj==SELF)
+		return obj;
 	return cons(QUOTE,cons(obj,NIL));
 }
 obj_t *to_obj(char *);
@@ -128,6 +130,12 @@ obj_t *to_obj(char *s)
 		free(tok);
 		break;
 	case SYMBOL:
+		if (!strcasecmp(tok,"NIL"))
+			return NIL;
+		if (!strcasecmp(tok,"T"))
+			return T;
+		if (!strcasecmp(tok,"@"))
+			return SELF;
 		obj=new_obj(SYMBOL,(long)tok,strlen(tok));
 		break;
 	case INTEGER:

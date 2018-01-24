@@ -1,6 +1,5 @@
 #ifndef LISP_H
 #define LISP_H
-#define CASE_INSENSITIVE
 #include <stdlib.h>
 // Type definitions
 typedef enum {false,true} bool;
@@ -173,11 +172,7 @@ core(EQ,2) eq(obj_t *obj1,obj_t *obj2)
 	// The types are equal
 	switch (obj1->type) {
 	case SYMBOL:
-#ifdef CASE_INSENSITIVE
 		return strcasecmp((char *)obj1->car,(char *)obj2->car)?NIL:T;
-#else
-		return strcmp((char *)obj1->car,(char *)obj2->car)?NIL:T;
-#endif
 	case INTEGER:
 	case DOUBLE:
 		return obj1->car==obj2->car?T:NIL;
