@@ -2,8 +2,8 @@
 #define STACK_H
 #define STACK_SIZE 1024
 #include "lisp.h"
-static obj_t *lisp_stack[STACK_SIZE];
-static int stack_index=0;
+static obj_t *lisp_stack[STACK_SIZE+1];
+static int stack_index=1;
 obj_t *stackitem(int n)
 {
 	return lisp_stack[stack_index-1-n];

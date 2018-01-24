@@ -96,6 +96,7 @@ obj_t SELF_OBJ=CONSTANT(@);
 obj_t *SELF=&SELF_OBJ;
 obj_t QUOTE_OBJ=CONSTANT(QUOTE);
 obj_t *QUOTE=&QUOTE_OBJ;
+obj_t *ENV=&NIL_OBJ;
 // LISP core functions
 #define core(name,argc) obj_t * // Info for dictionary code generator
 core(CAR,1) car(obj_t *obj)
@@ -293,5 +294,36 @@ core(ASSOC,2) assoc(obj_t *sym,obj_t *list)
 		if (eq(sym,car(car(o)))==T)
 			return car(o);
 	return NIL;
+}
+extern obj_t *DICT;
+core(DECLARE,2) declare(obj_t *sym,obj_t *def)
+{
+	obj_t *cdef=assoc(sym,DICT);
+	if (cdr(cdef)==NIL) {
+		DICT=cons(cons(sym,def),DICT);
+	} else {
+		rplacd(cdef,def);
+	}
+	return sym;
+}
+core(DEFINE,2) define(obj_t *sym,obj_t *def)
+{
+	obj_t *cdef=assoc(sym,ENV);
+	if (cdr(cdef)==NIL) {
+		ENV=cons(cons(sym,def),ENV);
+	} else {
+		rplacd(cdef,def);
+	}
+	return sym;
+}
+extern obj_t *stackitem(int);
+extern void drop();
+core(EXIT,0) l_exit()
+{
+	while (stackitem(0))
+		drop();
+	dec_rc(ENV);
+	dec_rc(DICT);
+	exit(0);
 }
 #endif

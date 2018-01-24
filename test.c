@@ -15,10 +15,9 @@ int main(int argc,char **argv)
 {
 	push(lread(200));
 	push(lread(200));
-	swap();
-	s_assoc();
-	s_print();
-	terpri();
+	s_declare();
 	drop();
-	return 0;
+	print(DICT);
+	terpri();
+	l_exit();
 }

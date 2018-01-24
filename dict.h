@@ -162,5 +162,34 @@ obj_t assoc_sym=CONSTANT(ASSOC);
 obj_t assoc_fun=FUNCTION_OBJ(&s_assoc);
 obj_t assoc_def=CONS_OBJ(&assoc_sym,&assoc_fun);
 obj_t assoc_dcell=CONS_OBJ(&assoc_def,&append_dcell);
-obj_t *DICT=&assoc_dcell;
+void s_declare() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(declare(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t declare_sym=CONSTANT(DECLARE);
+obj_t declare_fun=FUNCTION_OBJ(&s_declare);
+obj_t declare_def=CONS_OBJ(&declare_sym,&declare_fun);
+obj_t declare_dcell=CONS_OBJ(&declare_def,&assoc_dcell);
+void s_define() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(define(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t define_sym=CONSTANT(DEFINE);
+obj_t define_fun=FUNCTION_OBJ(&s_define);
+obj_t define_def=CONS_OBJ(&define_sym,&define_fun);
+obj_t define_dcell=CONS_OBJ(&define_def,&declare_dcell);
+void s_exit() {
+	push(l_exit());
+}
+obj_t l_exit_sym=CONSTANT(EXIT);
+obj_t l_exit_fun=FUNCTION_OBJ(&s_exit);
+obj_t l_exit_def=CONS_OBJ(&l_exit_sym,&l_exit_fun);
+obj_t l_exit_dcell=CONS_OBJ(&l_exit_def,&define_dcell);
+obj_t *DICT=&l_exit_dcell;
 #endif
