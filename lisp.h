@@ -323,4 +323,16 @@ core(EXIT,0) l_exit()
 	dec_rc(DICT);
 	exit(0);
 }
+extern void s_cons();
+extern void push();
+extern obj_t *pop();
+core(LIST,0) list()
+{
+	push(NIL);
+	while(stackitem(1)!=&ARGS)
+		s_cons();
+	register obj_t *r=pop();
+	r->refs--;
+	return r;
+}
 #endif

@@ -191,5 +191,12 @@ obj_t l_exit_sym=CONSTANT(EXIT);
 obj_t l_exit_fun=FUNCTION_OBJ(&s_exit);
 obj_t l_exit_def=CONS_OBJ(&l_exit_sym,&l_exit_fun);
 obj_t l_exit_dcell=CONS_OBJ(&l_exit_def,&define_dcell);
-obj_t *DICT=&l_exit_dcell;
+void s_list() {
+	push(list());
+}
+obj_t list_sym=CONSTANT(LIST);
+obj_t list_fun=FUNCTION_OBJ(&s_list);
+obj_t list_def=CONS_OBJ(&list_sym,&list_fun);
+obj_t list_dcell=CONS_OBJ(&list_def,&l_exit_dcell);
+obj_t *DICT=&list_dcell;
 #endif

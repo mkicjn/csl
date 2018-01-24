@@ -4,6 +4,7 @@
 #include "lisp.h"
 static obj_t *lisp_stack[STACK_SIZE+1];
 static int stack_index=1;
+// Stack functions
 obj_t *stackitem(int n)
 {
 	return lisp_stack[stack_index-1-n];

@@ -13,7 +13,11 @@ static void push_symbol(const char *str)
 }
 int main(int argc,char **argv)
 {
-	push(rpn(lread(200)));
+	push(&ARGS);
+	push_symbol("x");
+	push_symbol("y");
+	push_symbol("z");
+	s_list();
 	s_print();
 	drop();
 	terpri();
