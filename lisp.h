@@ -58,6 +58,8 @@ void destroy(obj_t *obj)
 		dec_rc((obj_t *)obj->car);
 		dec_rc((obj_t *)obj->cdr);
 		free(obj);
+	default:
+		break;
 	}
 }
 void rcdestroy(obj_t *obj)
@@ -169,8 +171,6 @@ core(EQ,2) eq(obj_t *obj1,obj_t *obj2)
 		return NIL;
 	// The types are equal
 	switch (obj1->type) {
-	case CELL:
-		return NIL;
 	case SYMBOL:
 #ifdef CASE_INSENSITIVE
 		return strcasecmp((char *)obj1->car,(char *)obj2->car)?NIL:T;
@@ -180,7 +180,7 @@ core(EQ,2) eq(obj_t *obj1,obj_t *obj2)
 	case INTEGER:
 	case DOUBLE:
 		return obj1->car==obj2->car?T:NIL;
-	case FUNCTION:
+	default:
 		return NIL;
 	}
 }
