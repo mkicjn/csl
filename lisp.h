@@ -333,6 +333,7 @@ core(LIST,0) list()
 		s_cons();
 	register obj_t *r=pop();
 	r->refs--;
+	pop(); // Remove args marker (temporary)
 	return r;
 }
 #endif
