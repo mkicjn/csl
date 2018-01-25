@@ -108,8 +108,8 @@ obj_t *SELF=&SELF_OBJ;
 obj_t QUOTE_OBJ=CONSTANT(QUOTE);
 obj_t *QUOTE=&QUOTE_OBJ;
 obj_t *ENV=&NIL_OBJ;
-obj_t ARGS=CONSTANT(<ARGS>);
-obj_t CALL=CONSTANT(<CALL>);
+obj_t ARGS=CONSTANT(<ARGS>); // Exists so special forms know where their arguments end
+obj_t CALL=CONSTANT(<CALL>); // Exists to tell `funcall` when to call vs. push a function
 // LISP core functions
 #define core(name,argc) obj_t * // Info for dictionary code generator
 core(CAR,1) car(obj_t *obj)
@@ -345,7 +345,6 @@ core(LIST,0) list()
 		s_cons();
 	register obj_t *r=pop();
 	r->refs--;
-	pop(); // Remove args marker (temporary)
 	return r;
 }
 long length(obj_t *list)
@@ -387,4 +386,45 @@ core(SEE,1) see(obj_t *func)
 	list=cons(f[0],cons(list,NIL));
 	return list;
 }
+core(SYMVAL,1) symval(obj_t *obj)
+{
+	if (obj->type!=SYMBOL)
+		return obj;
+	obj_t *gdef=assoc(obj,DICT);
+	if (gdef!=NIL)
+		return cdr(gdef);
+	return cdr(assoc(obj,ENV));
+}
+extern void nip();
+core(FUNCALL,1) funcall(obj_t *func)
+{
+	if (func->refs<0) {
+		void (*cf)()=(void *)func->car;
+		cf();
+		goto RETURN_TOS;
+	}
+	obj_t **f=(obj_t **)func->car;
+	obj_t *argn=f[0];
+	// To-do: Bind arguments
+	long size=func->cdr;
+	for (int i=1;i<size;i++) {
+		obj_t *obj=f[i];
+		if (obj==&ARGS)
+			push(&ARGS);
+		else if (obj==&CALL) {
+			obj_t *f=pop();
+			push(funcall(f));
+			dec_rc(f);
+			nip(); // Remove <ARGS>
+		} else if (obj==QUOTE) {
+			push(f[i+1]);
+			i++;
+		} else
+			push(symval(obj));
+	}
+RETURN_TOS:
+	stackitem(0)->refs-=stackitem(0)->refs>0;
+	return pop();
+}
+
 #endif

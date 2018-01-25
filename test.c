@@ -6,21 +6,18 @@
 #include "reader.h"
 #include "dict.h"
 #include "rpn.h"
-static void push_symbol(const char *str)
+static void push_sym(const char *str)
 {
 	int len=strlen(str)+1;
 	push(new_obj(SYMBOL,(long)strcpy(calloc(len,1),str),len));
 }
 int main(int argc,char **argv)
 {
-	push(lread(200));
+	push(NIL);
 	push(lread(200));
 	s_lambda();
+	s_funcall();
 	s_print();
 	terpri();
-	s_see();
-	s_print();
-	terpri();
-	drop();
 	l_exit();
 }

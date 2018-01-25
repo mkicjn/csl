@@ -227,5 +227,23 @@ obj_t see_sym=CONSTANT(SEE);
 obj_t see_fun=FUNCTION_OBJ(&s_see);
 obj_t see_def=CONS_OBJ(&see_sym,&see_fun);
 obj_t see_dcell=CONS_OBJ(&see_def,&lambda_dcell);
-obj_t *DICT=&see_dcell;
+void s_symval() {
+	obj_t *a=pop();
+	push(symval(a));
+	dec_rc(a);
+}
+obj_t symval_sym=CONSTANT(SYMVAL);
+obj_t symval_fun=FUNCTION_OBJ(&s_symval);
+obj_t symval_def=CONS_OBJ(&symval_sym,&symval_fun);
+obj_t symval_dcell=CONS_OBJ(&symval_def,&see_dcell);
+void s_funcall() {
+	obj_t *a=pop();
+	push(funcall(a));
+	dec_rc(a);
+}
+obj_t funcall_sym=CONSTANT(FUNCALL);
+obj_t funcall_fun=FUNCTION_OBJ(&s_funcall);
+obj_t funcall_def=CONS_OBJ(&funcall_sym,&funcall_fun);
+obj_t funcall_dcell=CONS_OBJ(&funcall_def,&symval_dcell);
+obj_t *DICT=&funcall_dcell;
 #endif

@@ -40,4 +40,10 @@ void over()
 {
 	push(lisp_stack[stack_index-2]);
 }
+void nip()
+{
+	dec_rc(lisp_stack[stack_index-2]);
+	lisp_stack[stack_index-2]=lisp_stack[stack_index-1];
+	stack_index--;
+}
 #endif
