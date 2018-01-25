@@ -43,12 +43,15 @@ obj_t *new_dobj(double car)
 	return (obj_t *)obj;
 }
 void dec_rc(obj_t *);
+void destroy_func(obj_t *);
 void destroy(obj_t *obj)
 {
 	switch (obj->type) {
-	case SYMBOL:
 	case FUNCTION:
-		free((void *)obj->car);
+		destroy_func(obj);
+		break;
+	case SYMBOL:
+		free((char *)obj->car);
 	case DOUBLE:
 	case INTEGER:
 		free(obj);
@@ -60,6 +63,15 @@ void destroy(obj_t *obj)
 	default:
 		break;
 	}
+}
+void destroy_func(obj_t *obj)
+{
+	long size=obj->cdr;
+	obj_t **f=(obj_t **)obj->car;
+	for (int i=0;i<size;i++)
+		dec_rc(f[i]);
+	free(f);
+	free(obj);
 }
 void rcdestroy(obj_t *obj)
 {
@@ -96,8 +108,8 @@ obj_t *SELF=&SELF_OBJ;
 obj_t QUOTE_OBJ=CONSTANT(QUOTE);
 obj_t *QUOTE=&QUOTE_OBJ;
 obj_t *ENV=&NIL_OBJ;
-obj_t ARGS=CONSTANT({ARGS});
-obj_t CALL=CONSTANT({CALL});
+obj_t ARGS=CONSTANT(<ARGS>);
+obj_t CALL=CONSTANT(<CALL>);
 // LISP core functions
 #define core(name,argc) obj_t * // Info for dictionary code generator
 core(CAR,1) car(obj_t *obj)
@@ -335,5 +347,44 @@ core(LIST,0) list()
 	r->refs--;
 	pop(); // Remove args marker (temporary)
 	return r;
+}
+long length(obj_t *list)
+{
+	if (list->type!=CELL)
+		return 0;
+	long c=0;
+	for (;list!=NIL;list=cdr(list))
+		c++;
+	return c;
+}
+core(LENGTH,1) l_length(obj_t *list)
+{
+	return new_obj(INTEGER,length(list),0);
+}
+extern obj_t *rpn(obj_t *);
+core(LAMBDA,2) lambda(obj_t *args,obj_t *body)
+{
+	obj_t *rpf=rpn(body),*o=rpf;
+	long size=1+length(rpf);
+	obj_t **f=malloc(sizeof(obj_t *)*size);
+	f[0]=args;
+	inc_rc(args);
+	for (int i=1;i<size;i++) {
+		f[i]=car(o);
+		inc_rc(f[i]);
+		o=cdr(o);
+	}
+	destroy(rpf);
+	return new_obj(FUNCTION,(long)f,size);
+}
+core(SEE,1) see(obj_t *func)
+{
+	long size=func->cdr;
+	obj_t **f=(obj_t **)func->car;
+	obj_t *list=NIL;
+	for (int i=size-1;i>0;i--)
+		list=cons(f[i],list);
+	list=cons(f[0],cons(list,NIL));
+	return list;
 }
 #endif

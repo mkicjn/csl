@@ -198,5 +198,34 @@ obj_t list_sym=CONSTANT(LIST);
 obj_t list_fun=FUNCTION_OBJ(&s_list);
 obj_t list_def=CONS_OBJ(&list_sym,&list_fun);
 obj_t list_dcell=CONS_OBJ(&list_def,&l_exit_dcell);
-obj_t *DICT=&list_dcell;
+void s_length() {
+	obj_t *a=pop();
+	push(l_length(a));
+	dec_rc(a);
+}
+obj_t l_length_sym=CONSTANT(LENGTH);
+obj_t l_length_fun=FUNCTION_OBJ(&s_length);
+obj_t l_length_def=CONS_OBJ(&l_length_sym,&l_length_fun);
+obj_t l_length_dcell=CONS_OBJ(&l_length_def,&list_dcell);
+void s_lambda() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(lambda(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t lambda_sym=CONSTANT(LAMBDA);
+obj_t lambda_fun=FUNCTION_OBJ(&s_lambda);
+obj_t lambda_def=CONS_OBJ(&lambda_sym,&lambda_fun);
+obj_t lambda_dcell=CONS_OBJ(&lambda_def,&l_length_dcell);
+void s_see() {
+	obj_t *a=pop();
+	push(see(a));
+	dec_rc(a);
+}
+obj_t see_sym=CONSTANT(SEE);
+obj_t see_fun=FUNCTION_OBJ(&s_see);
+obj_t see_def=CONS_OBJ(&see_sym,&see_fun);
+obj_t see_dcell=CONS_OBJ(&see_def,&lambda_dcell);
+obj_t *DICT=&see_dcell;
 #endif
