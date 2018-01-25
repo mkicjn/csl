@@ -426,9 +426,9 @@ core(FUNCALL,1) funcall(obj_t *func)
 		} else
 			push(symval(obj));
 	}
+	ENV=old_env;
 RETURN_TOS:
 	stackitem(0)->refs-=stackitem(0)->refs>0;
-	ENV=old_env;
 	return pop();
 }
 
