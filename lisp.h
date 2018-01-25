@@ -364,11 +364,13 @@ extern obj_t *rpn(obj_t *);
 core(LAMBDA,2) lambda(obj_t *args,obj_t *body)
 {
 	obj_t *rpf=rpn(body),*o=rpf;
-	long size=1+length(rpf);
+	long size=2+length(rpf);
 	obj_t **f=malloc(sizeof(obj_t *)*size);
 	f[0]=args;
 	inc_rc(args);
-	for (int i=1;i<size;i++) {
+	f[1]=ENV;
+	inc_rc(ENV);
+	for (int i=2;i<size;i++) {
 		f[i]=car(o);
 		inc_rc(f[i]);
 		o=cdr(o);
@@ -381,7 +383,7 @@ core(SEE,1) see(obj_t *func)
 	long size=func->cdr;
 	obj_t **f=(obj_t **)func->car;
 	obj_t *list=NIL;
-	for (int i=size-1;i>0;i--)
+	for (int i=size-1;i>1;i--)
 		list=cons(f[i],list);
 	list=cons(f[0],cons(list,NIL));
 	return list;
@@ -405,9 +407,11 @@ core(FUNCALL,1) funcall(obj_t *func)
 	}
 	obj_t **f=(obj_t **)func->car;
 	obj_t *argn=f[0];
+	obj_t *old_env=ENV;
+	ENV=f[1];
 	// To-do: Bind arguments
 	long size=func->cdr;
-	for (int i=1;i<size;i++) {
+	for (int i=2;i<size;i++) {
 		obj_t *obj=f[i];
 		if (obj==&ARGS)
 			push(&ARGS);
@@ -424,6 +428,7 @@ core(FUNCALL,1) funcall(obj_t *func)
 	}
 RETURN_TOS:
 	stackitem(0)->refs-=stackitem(0)->refs>0;
+	ENV=old_env;
 	return pop();
 }
 
