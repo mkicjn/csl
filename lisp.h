@@ -158,7 +158,7 @@ void print_cell(obj_t *obj)
 {
 	putchar('(');
 	obj_t *o=obj;
-	while (o!=NIL) {
+	while (o!=NIL) {// TODO: Abstract
 		if (o->type!=CELL) {
 			fputs(". ",stdout);
 			print(o);
@@ -307,6 +307,8 @@ core(ASSOC,2) assoc(obj_t *sym,obj_t *list)
 extern obj_t *DICT;
 core(DECLARE,2) declare(obj_t *sym,obj_t *def)
 {
+	if (sym->refs<0)
+		return NIL;
 	obj_t *cdef=assoc(sym,DICT);
 	if (cdr(cdef)==NIL) {
 		DICT=cons(cons(sym,def),DICT);
@@ -317,6 +319,8 @@ core(DECLARE,2) declare(obj_t *sym,obj_t *def)
 }
 core(DEFINE,2) define(obj_t *sym,obj_t *def)
 {
+	if (sym->refs<0)
+		return NIL;
 	obj_t *cdef=assoc(sym,ENV);
 	if (cdr(cdef)==NIL) {
 		ENV=cons(cons(sym,def),ENV);
@@ -324,6 +328,15 @@ core(DEFINE,2) define(obj_t *sym,obj_t *def)
 		rplacd(cdef,def);
 	}
 	return sym;
+}
+core(SYMVAL,1) symval(obj_t *obj)
+{
+	if (obj->type!=SYMBOL)
+		return obj;
+	obj_t *gdef=assoc(obj,DICT);
+	if (gdef!=NIL)
+		return cdr(gdef);
+	return cdr(assoc(obj,ENV));
 }
 extern obj_t *stackitem(int);
 extern void drop();
@@ -388,30 +401,32 @@ core(SEE,1) see(obj_t *func)
 	list=cons(f[0],cons(list,NIL));
 	return list;
 }
-core(SYMVAL,1) symval(obj_t *obj)
-{
-	if (obj->type!=SYMBOL)
-		return obj;
-	obj_t *gdef=assoc(obj,DICT);
-	if (gdef!=NIL)
-		return cdr(gdef);
-	return cdr(assoc(obj,ENV));
-}
 extern void nip();
+extern void ndrop(int);
+void bind_arguments(obj_t *argn)
+{	// Bind symbols in list to items on stack
+	long argc=length(argn);
+	for (long i=argc;i>0;i++) {
+		define(car(argn),stackitem(i-1));
+		dec_rc(stackitem(i-1));
+		argn=cdr(argn);
+	}
+	ndrop(argc);
+}
 core(FUNCALL,1) funcall(obj_t *func)
-{
+{	
 	if (func->refs<0) {
 		void (*cf)()=(void *)func->car;
 		cf();
 		goto RETURN_TOS;
 	}
 	obj_t **f=(obj_t **)func->car;
-	obj_t *argn=f[0];
 	obj_t *old_env=ENV;
 	ENV=f[1];
-	// To-do: Bind arguments
+	bind_arguments(f[0]);
+	// Execute function
 	long size=func->cdr;
-	for (int i=2;i<size;i++) {
+	for (int i=2;i<size;i++) {// TODO: Abstract
 		obj_t *obj=f[i];
 		if (obj==&ARGS)
 			push(&ARGS);
