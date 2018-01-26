@@ -13,12 +13,11 @@ static void push_sym(const char *str)
 }
 int main(int argc,char **argv)
 {
-	push(&ARGS);
+	push(lread(200));
+	push(lread(200));
 	push(lread(200));
 	push(lread(200));
 	s_lambda();
-	push(lread(200));
-	swap();
 	s_funcall();
 	s_print();
 	terpri();

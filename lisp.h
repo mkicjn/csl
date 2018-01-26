@@ -80,13 +80,13 @@ void rcdestroy(obj_t *obj)
 }
 void inc_rc(obj_t *obj)
 {
-	if (0xff>(long)obj)
+	if (!obj)
 		return;
 	obj->refs+=obj->refs>=0;
 }
 void dec_rc(obj_t *obj)
 {
-	if (0xff>(long)obj)
+	if (!obj)
 		return;
 	obj->refs-=obj->refs>0;
 	if (obj->refs==0)
@@ -379,10 +379,10 @@ core(LAMBDA,2) lambda(obj_t *args,obj_t *body)
 	obj_t *rpf=rpn(body),*o=rpf;
 	long size=2+length(rpf);
 	obj_t **f=malloc(sizeof(obj_t *)*size);
-	f[0]=args;
-	inc_rc(args);
-	f[1]=ENV;
+	f[0]=ENV;
 	inc_rc(ENV);
+	f[1]=args;
+	inc_rc(args);
 	for (int i=2;i<size;i++) {
 		f[i]=car(o);
 		inc_rc(f[i]);
@@ -405,12 +405,14 @@ extern void nip();
 extern void ndrop(int);
 void bind_arguments(obj_t *argn)
 {	// Bind symbols in list to items on stack
+	obj_t *l=argn;
 	long argc=length(argn);
 	for (long i=0;i<argc;i++) {
-		define(car(argn),stackitem(argc-1-i));
+		define(car(l),stackitem(argc-1-i));
 		dec_rc(stackitem(argc-1-i));
-		argn=cdr(argn);
+		l=cdr(l);
 	}
+	//dec_rc(argn);
 	ndrop(argc);
 }
 core(FUNCALL,1) funcall(obj_t *func)
@@ -422,8 +424,8 @@ core(FUNCALL,1) funcall(obj_t *func)
 	}
 	obj_t **f=(obj_t **)func->car;
 	obj_t *old_env=ENV;
-	ENV=f[1];
-	bind_arguments(f[0]);
+	ENV=f[0];
+	bind_arguments(f[1]);
 	// Execute function
 	long size=func->cdr;
 	for (int i=2;i<size;i++) {// TODO: Abstract
