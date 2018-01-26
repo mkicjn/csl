@@ -406,9 +406,9 @@ extern void ndrop(int);
 void bind_arguments(obj_t *argn)
 {	// Bind symbols in list to items on stack
 	long argc=length(argn);
-	for (long i=argc;i>0;i++) {
-		define(car(argn),stackitem(i-1));
-		dec_rc(stackitem(i-1));
+	for (long i=0;i<argc;i++) {
+		define(car(argn),stackitem(argc-1-i));
+		dec_rc(stackitem(argc-1-i));
 		argn=cdr(argn);
 	}
 	ndrop(argc);
