@@ -456,7 +456,7 @@ char *slurp(char *file)
 	long size=ftell(fs);
 	rewind(fs);
 	char *str=calloc(size+1,1);
-	fgets(str,size+1,fs);
+	fread(str,1,size,fs);
 	fclose(fs);
 	return str;
 }

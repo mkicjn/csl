@@ -47,7 +47,7 @@ type_t infer_type(char *s)
 char *get_word(char *s)
 {
 	register int c=0;
-	for (;s[c]&&s[c]!=' '&&s[c]!='\t'&&s[c]!=')';c++); // Count characters
+	for (;s[c]&&s[c]!=' '&&s[c]!='\t'&&s[c]!='\n'&&s[c]!=')';c++); // Count characters
 	return memcpy(calloc(c+1,1),s,c);
 }
 char *get_list(char *s)
