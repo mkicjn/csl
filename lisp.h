@@ -413,7 +413,7 @@ void bind_arguments(obj_t *argn)
 	ndrop(argc);
 }
 core(FUNCALL,1) funcall(obj_t *func)
-{	
+{
 	if (func->refs<0) {
 		void (*cf)()=(void *)func->car;
 		cf();

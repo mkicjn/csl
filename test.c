@@ -21,11 +21,14 @@ int main(int argc,char **argv)
 		s_funcall();
 		l_exit();
 	}
-	push(NIL);
-	push(lread(200));
-	s_lambda();
-	s_funcall();
-	s_print();
-	terpri();
-	l_exit();
+	for (;;) {
+		push(NIL);
+		push(lread(200));
+		s_lambda();
+		s_funcall();
+		terpri();
+		s_print();
+		terpri();
+		drop();
+	}
 }
