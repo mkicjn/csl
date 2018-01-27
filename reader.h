@@ -127,29 +127,29 @@ obj_t *to_obj(char *s)
 	switch (infer_type(tok)) {
 	case CELL:
 		obj=to_list(tok);
-		free(tok);
 		break;
 	case SYMBOL:
 		if (!strcasecmp(tok,"NIL"))
-			return NIL;
-		if (!strcasecmp(tok,"T"))
-			return T;
-		if (!strcasecmp(tok,"@"))
-			return SELF;
-		obj=new_obj(SYMBOL,(long)tok,strlen(tok));
+			obj=NIL;
+		else if (!strcasecmp(tok,"T"))
+			obj=T;
+		else if (!strcasecmp(tok,"@"))
+			obj=SELF;
+		else {
+			obj=new_obj(SYMBOL,(long)tok,strlen(tok));
+			return q?quote(obj):obj;
+		}
 		break;
 	case INTEGER:
 		obj=new_obj(INTEGER,atol(tok),0);
-		free(tok);
 		break;
 	case DOUBLE:
 		obj=new_dobj(strtod(tok,NULL));
-		free(tok);
 		break;
 	default:
 		obj=NIL;
-		free(tok);
 	}
+	free(tok);
 	return q?quote(obj):obj;
 }
 #endif

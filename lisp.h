@@ -73,11 +73,6 @@ void destroy_func(obj_t *obj)
 	free(f);
 	free(obj);
 }
-void rcdestroy(obj_t *obj)
-{
-	if (obj->refs==0)
-		destroy(obj);
-}
 void inc_rc(obj_t *obj)
 {
 	if (!obj)
@@ -412,7 +407,6 @@ void bind_arguments(obj_t *argn)
 		dec_rc(stackitem(argc-1-i));
 		l=cdr(l);
 	}
-	//dec_rc(argn);
 	ndrop(argc);
 }
 core(FUNCALL,1) funcall(obj_t *func)
@@ -443,10 +437,34 @@ core(FUNCALL,1) funcall(obj_t *func)
 		} else
 			push(symval(obj));
 	}
+	dec_rc(ENV);
 	ENV=old_env;
 RETURN_TOS:
 	stackitem(0)->refs-=stackitem(0)->refs>0;
 	return pop();
 }
-
+char *slurp(char *file)
+{
+	FILE *fs=fopen(file,"r");
+	if (!fs)
+		return NULL;
+	fseek(fs,0,SEEK_END);
+	long size=ftell(fs);
+	rewind(fs);
+	char *str=calloc(size+1,1);
+	fgets(str,size+1,fs);
+	fclose(fs);
+	return str;
+}
+core(LOAD,1) load(obj_t *obj)
+{
+	if (obj->type!=SYMBOL)
+		return NIL;
+	char *file=slurp((char *)obj->car);
+	if (!file)
+		return NIL;
+	obj_t *o=to_obj(file);
+	free(file);
+	return o;
+}
 #endif

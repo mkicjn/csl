@@ -184,13 +184,22 @@ obj_t define_sym=CONSTANT(DEFINE);
 obj_t define_fun=FUNCTION_OBJ(&s_define);
 obj_t define_def=CONS_OBJ(&define_sym,&define_fun);
 obj_t define_dcell=CONS_OBJ(&define_def,&declare_dcell);
+void s_symval() {
+	obj_t *a=pop();
+	push(symval(a));
+	dec_rc(a);
+}
+obj_t symval_sym=CONSTANT(SYMVAL);
+obj_t symval_fun=FUNCTION_OBJ(&s_symval);
+obj_t symval_def=CONS_OBJ(&symval_sym,&symval_fun);
+obj_t symval_dcell=CONS_OBJ(&symval_def,&define_dcell);
 void s_exit() {
 	push(l_exit());
 }
 obj_t l_exit_sym=CONSTANT(EXIT);
 obj_t l_exit_fun=FUNCTION_OBJ(&s_exit);
 obj_t l_exit_def=CONS_OBJ(&l_exit_sym,&l_exit_fun);
-obj_t l_exit_dcell=CONS_OBJ(&l_exit_def,&define_dcell);
+obj_t l_exit_dcell=CONS_OBJ(&l_exit_def,&symval_dcell);
 void s_list() {
 	push(list());
 }
@@ -227,15 +236,6 @@ obj_t see_sym=CONSTANT(SEE);
 obj_t see_fun=FUNCTION_OBJ(&s_see);
 obj_t see_def=CONS_OBJ(&see_sym,&see_fun);
 obj_t see_dcell=CONS_OBJ(&see_def,&lambda_dcell);
-void s_symval() {
-	obj_t *a=pop();
-	push(symval(a));
-	dec_rc(a);
-}
-obj_t symval_sym=CONSTANT(SYMVAL);
-obj_t symval_fun=FUNCTION_OBJ(&s_symval);
-obj_t symval_def=CONS_OBJ(&symval_sym,&symval_fun);
-obj_t symval_dcell=CONS_OBJ(&symval_def,&see_dcell);
 void s_funcall() {
 	obj_t *a=pop();
 	push(funcall(a));
@@ -244,6 +244,15 @@ void s_funcall() {
 obj_t funcall_sym=CONSTANT(FUNCALL);
 obj_t funcall_fun=FUNCTION_OBJ(&s_funcall);
 obj_t funcall_def=CONS_OBJ(&funcall_sym,&funcall_fun);
-obj_t funcall_dcell=CONS_OBJ(&funcall_def,&symval_dcell);
-obj_t *DICT=&funcall_dcell;
+obj_t funcall_dcell=CONS_OBJ(&funcall_def,&see_dcell);
+void s_load() {
+	obj_t *a=pop();
+	push(load(a));
+	dec_rc(a);
+}
+obj_t load_sym=CONSTANT(LOAD);
+obj_t load_fun=FUNCTION_OBJ(&s_load);
+obj_t load_def=CONS_OBJ(&load_sym,&load_fun);
+obj_t load_dcell=CONS_OBJ(&load_def,&funcall_dcell);
+obj_t *DICT=&load_dcell;
 #endif
