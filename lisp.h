@@ -102,9 +102,12 @@ obj_t SELF_OBJ=CONSTANT(@);
 obj_t *SELF=&SELF_OBJ;
 obj_t QUOTE_OBJ=CONSTANT(QUOTE);
 obj_t *QUOTE=&QUOTE_OBJ;
-obj_t *ENV=&NIL_OBJ;
+obj_t PROGN_OBJ=CONSTANT(PROGN);
+obj_t *PROGN=&PROGN_OBJ;
 obj_t ARGS=CONSTANT(<ARGS>); // Exists so special forms know where their arguments end
 obj_t CALL=CONSTANT(<CALL>); // Exists to tell `funcall` when to call vs. push a function
+obj_t DROP=CONSTANT(<DROP>); // Used in `progn` to discard form evaluations
+obj_t *ENV=&NIL_OBJ; // Not a constant
 // LISP core functions
 #define core(name,argc) obj_t * // Info for dictionary code generator
 core(CAR,1) car(obj_t *obj)
@@ -431,6 +434,8 @@ core(FUNCALL,1) funcall(obj_t *func)
 			push(funcall(f));
 			dec_rc(f);
 			nip(); // Remove <ARGS>
+		} else if (obj==&DROP) {
+			drop();
 		} else if (obj==QUOTE) {
 			push(f[i+1]);
 			i++;
