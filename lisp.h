@@ -424,6 +424,7 @@ void bind_arguments(obj_t *argn)
 	}
 	ndrop(argc);
 }
+void do_body(obj_t **f,long size);
 core(FUNCALL,1) funcall(obj_t *func)
 {
 	if (func->refs<0) {
@@ -435,8 +436,15 @@ core(FUNCALL,1) funcall(obj_t *func)
 	obj_t *old_env=ENV;
 	ENV=f[0];
 	bind_arguments(f[1]);
-	// Execute function
-	long size=func->cdr;
+	do_body(f,func->cdr);
+	ENV=old_env;
+RETURN_TOS:
+	stackitem(0)->refs-=stackitem(0)->refs>0;
+	return pop();
+
+}
+void do_body(obj_t **f,long size)
+{
 	for (int i=2;i<size;i++) {// TODO: Abstract
 		obj_t *obj=f[i];
 		if (obj==&ARGS) {
@@ -454,7 +462,7 @@ core(FUNCALL,1) funcall(obj_t *func)
 			obj_t *o=pop();
 			i++;
 			if (o!=NIL) {
-				push(funcall(f[i]));
+				do_body((obj_t **)f[i]->car,f[i]->cdr);
 				for (;f[i]!=&COND_END;i++);
 			}
 			dec_rc(o);
@@ -464,10 +472,6 @@ core(FUNCALL,1) funcall(obj_t *func)
 		} else
 			push(symval(obj));
 	}
-	ENV=old_env;
-RETURN_TOS:
-	stackitem(0)->refs-=stackitem(0)->refs>0;
-	return pop();
 }
 char *slurp(char *file)
 {
