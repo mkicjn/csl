@@ -139,6 +139,8 @@ obj_t *to_obj(char *s)
 			obj=QUOTE;
 		else if (!strcasecmp(tok,"PROGN"))
 			obj=PROGN;
+		else if (!strcasecmp(tok,"COND"))
+			obj=COND;
 		else {
 			obj=new_obj(SYMBOL,(long)tok,strlen(tok));
 			return q?quote(obj):obj;

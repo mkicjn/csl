@@ -84,7 +84,7 @@ void dec_rc(obj_t *obj)
 	if (!obj)
 		return;
 	obj->refs-=obj->refs>0;
-	if (obj->refs==0)
+	if (!obj->refs)
 		destroy(obj);
 }
 // Constants
@@ -104,9 +104,13 @@ obj_t QUOTE_OBJ=CONSTANT(QUOTE);
 obj_t *QUOTE=&QUOTE_OBJ;
 obj_t PROGN_OBJ=CONSTANT(PROGN);
 obj_t *PROGN=&PROGN_OBJ;
+obj_t COND_OBJ=CONSTANT(COND);
+obj_t *COND=&COND_OBJ;
 obj_t ARGS=CONSTANT(<ARGS>); // Exists so special forms know where their arguments end
 obj_t CALL=CONSTANT(<CALL>); // Exists to tell `funcall` when to call vs. push a function
 obj_t DROP=CONSTANT(<DROP>); // Used in `progn` to discard form evaluations
+obj_t COND_DO=CONSTANT(<COND_DO>);
+obj_t COND_END=CONSTANT(<COND_END>);
 obj_t *ENV=&NIL_OBJ; // Not a constant
 // LISP core functions
 #define core(name,argc) obj_t * // Info for dictionary code generator
@@ -147,8 +151,11 @@ core(PRINT,1) print(obj_t *obj)
 	case DOUBLE:
 		printf("%lf",((dobj_t *)obj)->car);
 		break;
-	default:
+	case ERROR:
 		printf("{ERROR}");
+		break;
+	default:
+		printf("{UNKNOWN TYPE}");
 	}
 	return obj;
 }
@@ -329,6 +336,8 @@ core(DEFINE,2) define(obj_t *sym,obj_t *def)
 }
 core(SYMVAL,1) symval(obj_t *obj)
 {
+	if (obj->refs<0)
+		return obj;
 	if (obj->type!=SYMBOL)
 		return obj;
 	obj_t *gdef=assoc(obj,DICT);
@@ -386,17 +395,20 @@ core(LAMBDA,2) lambda(obj_t *args,obj_t *body)
 		inc_rc(f[i]);
 		o=cdr(o);
 	}
-	destroy(rpf);
+	if (!rpf->refs)
+		destroy(rpf);
 	return new_obj(FUNCTION,(long)f,size);
 }
 core(SEE,1) see(obj_t *func)
 {
+	if (func->type!=FUNCTION&&func->refs<0)
+		return func;
 	long size=func->cdr;
 	obj_t **f=(obj_t **)func->car;
 	obj_t *list=NIL;
 	for (int i=size-1;i>1;i--)
 		list=cons(f[i],list);
-	list=cons(f[0],cons(list,NIL));
+	list=cons(f[0],cons(f[1],cons(list,NIL)));
 	return list;
 }
 extern void nip();
@@ -427,15 +439,25 @@ core(FUNCALL,1) funcall(obj_t *func)
 	long size=func->cdr;
 	for (int i=2;i<size;i++) {// TODO: Abstract
 		obj_t *obj=f[i];
-		if (obj==&ARGS)
+		if (obj==&ARGS) {
 			push(&ARGS);
-		else if (obj==&CALL) {
+		} else if (obj==&CALL) {
 			obj_t *f=pop();
 			push(funcall(f));
 			dec_rc(f);
 			nip(); // Remove <ARGS>
 		} else if (obj==&DROP) {
 			drop();
+		} else if (obj==&COND_END) {
+			push(NIL);
+		} else if (obj==&COND_DO) {
+			obj_t *o=pop();
+			i++;
+			if (o!=NIL) {
+				push(funcall(f[i]));
+				for (;f[i]!=&COND_END;i++);
+			}
+			dec_rc(o);
 		} else if (obj==QUOTE) {
 			push(f[i+1]);
 			i++;
