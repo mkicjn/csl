@@ -324,7 +324,7 @@ core(DECLARE,2) declare(obj_t *sym,obj_t *def)
 }
 core(DEFINE,2) define(obj_t *sym,obj_t *def)
 {
-	if (sym->refs<0)
+	if (sym->refs<0&&sym!=SELF)
 		return NIL;
 	obj_t *cdef=assoc(sym,ENV);
 	if (cdr(cdef)==NIL) {
@@ -336,7 +336,7 @@ core(DEFINE,2) define(obj_t *sym,obj_t *def)
 }
 core(SYMVAL,1) symval(obj_t *obj)
 {
-	if (obj->refs<0)
+	if (obj->refs<0&&obj!=SELF)
 		return obj;
 	if (obj->type!=SYMBOL)
 		return obj;
@@ -413,7 +413,7 @@ core(SEE,1) see(obj_t *func)
 }
 extern void nip();
 extern void ndrop(int);
-void bind_arguments(obj_t *argn)
+void bind_args(obj_t *argn)
 {	// Bind symbols in list to items on stack
 	obj_t *l=argn;
 	long argc=length(argn);
@@ -435,7 +435,8 @@ core(FUNCALL,1) funcall(obj_t *func)
 	obj_t **f=(obj_t **)func->car;
 	obj_t *old_env=ENV;
 	ENV=f[0];
-	bind_arguments(f[1]);
+	bind_args(f[1]);
+	define(SELF,func);
 	do_body(f,func->cdr);
 	ENV=old_env;
 RETURN_TOS:
