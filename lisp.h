@@ -436,18 +436,17 @@ core(FUNCALL,1) funcall(obj_t *func)
 	obj_t *old_env=ENV;
 	ENV=f[0];
 	bind_args(f[1]);
-	define(SELF,func);
+	//define(SELF,func);
 	do_body(f,func->cdr);
 	ENV=old_env;
 RETURN_TOS:
 	stackitem(0)->refs-=stackitem(0)->refs>0;
 	return pop();
-
 }
-void do_body(obj_t **f,long size)
+void do_body(obj_t **b,long size)
 {
 	for (int i=2;i<size;i++) {// TODO: Abstract
-		obj_t *obj=f[i];
+		obj_t *obj=b[i];
 		if (obj==&ARGS) {
 			push(&ARGS);
 		} else if (obj==&CALL) {
@@ -463,12 +462,12 @@ void do_body(obj_t **f,long size)
 			obj_t *o=pop();
 			i++;
 			if (o!=NIL) {
-				do_body((obj_t **)f[i]->car,f[i]->cdr);
-				for (;f[i]!=&COND_END;i++);
+				do_body((obj_t **)b[i]->car,b[i]->cdr);
+				for (;b[i]!=&COND_END;i++);
 			}
 			dec_rc(o);
 		} else if (obj==QUOTE) {
-			push(f[i+1]);
+			push(b[i+1]);
 			i++;
 		} else
 			push(symval(obj));
