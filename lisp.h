@@ -314,24 +314,14 @@ core(DECLARE,2) declare(obj_t *sym,obj_t *def)
 {
 	if (sym->refs<0)
 		return NIL;
-	obj_t *cdef=assoc(sym,DICT);
-	if (cdr(cdef)==NIL) {
-		DICT=cons(cons(sym,def),DICT);
-	} else {
-		rplacd(cdef,def);
-	}
+	DICT=cons(cons(sym,def),DICT);
 	return sym;
 }
 core(DEFINE,2) define(obj_t *sym,obj_t *def)
 {
 	if (sym->refs<0&&sym!=SELF)
 		return NIL;
-	obj_t *cdef=assoc(sym,ENV);
-	if (cdr(cdef)==NIL) {
-		ENV=cons(cons(sym,def),ENV);
-	} else {
-		rplacd(cdef,def);
-	}
+	ENV=cons(cons(sym,def),ENV);
 	return sym;
 }
 core(SYMVAL,1) symval(obj_t *obj)
