@@ -93,13 +93,13 @@ obj_t rplacd_sym=CONSTANT(RPLACD);
 obj_t rplacd_fun=FUNCTION_OBJ(&s_rplacd);
 obj_t rplacd_def=CONS_OBJ(&rplacd_sym,&rplacd_fun);
 obj_t rplacd_dcell=CONS_OBJ(&rplacd_def,&rplaca_dcell);
-void s_read() {
+void s_oread() {
 	obj_t *a=pop();
 	push(oread(a));
 	dec_rc(a);
 }
 obj_t oread_sym=CONSTANT(READ);
-obj_t oread_fun=FUNCTION_OBJ(&s_read);
+obj_t oread_fun=FUNCTION_OBJ(&s_oread);
 obj_t oread_def=CONS_OBJ(&oread_sym,&oread_fun);
 obj_t oread_dcell=CONS_OBJ(&oread_def,&rplacd_dcell);
 void s_atom() {
@@ -193,11 +193,11 @@ obj_t symval_sym=CONSTANT(SYMVAL);
 obj_t symval_fun=FUNCTION_OBJ(&s_symval);
 obj_t symval_def=CONS_OBJ(&symval_sym,&symval_fun);
 obj_t symval_dcell=CONS_OBJ(&symval_def,&define_dcell);
-void s_exit() {
+void s_l_exit() {
 	push(l_exit());
 }
 obj_t l_exit_sym=CONSTANT(EXIT);
-obj_t l_exit_fun=FUNCTION_OBJ(&s_exit);
+obj_t l_exit_fun=FUNCTION_OBJ(&s_l_exit);
 obj_t l_exit_def=CONS_OBJ(&l_exit_sym,&l_exit_fun);
 obj_t l_exit_dcell=CONS_OBJ(&l_exit_def,&symval_dcell);
 void s_list() {
@@ -207,13 +207,13 @@ obj_t list_sym=CONSTANT(LIST);
 obj_t list_fun=FUNCTION_OBJ(&s_list);
 obj_t list_def=CONS_OBJ(&list_sym,&list_fun);
 obj_t list_dcell=CONS_OBJ(&list_def,&l_exit_dcell);
-void s_length() {
+void s_l_length() {
 	obj_t *a=pop();
 	push(l_length(a));
 	dec_rc(a);
 }
 obj_t l_length_sym=CONSTANT(LENGTH);
-obj_t l_length_fun=FUNCTION_OBJ(&s_length);
+obj_t l_length_fun=FUNCTION_OBJ(&s_l_length);
 obj_t l_length_def=CONS_OBJ(&l_length_sym,&l_length_fun);
 obj_t l_length_dcell=CONS_OBJ(&l_length_def,&list_dcell);
 void s_lambda() {
@@ -263,5 +263,50 @@ obj_t eval_sym=CONSTANT(EVAL);
 obj_t eval_fun=FUNCTION_OBJ(&s_eval);
 obj_t eval_def=CONS_OBJ(&eval_sym,&eval_fun);
 obj_t eval_dcell=CONS_OBJ(&eval_def,&load_dcell);
-obj_t *DICT=&eval_dcell;
+#include "arith.h"
+void s_add() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(add(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t add_sym=CONSTANT(+);
+obj_t add_fun=FUNCTION_OBJ(&s_add);
+obj_t add_def=CONS_OBJ(&add_sym,&add_fun);
+obj_t add_dcell=CONS_OBJ(&add_def,&eval_dcell);
+void s_sub() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(sub(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t sub_sym=CONSTANT(-);
+obj_t sub_fun=FUNCTION_OBJ(&s_sub);
+obj_t sub_def=CONS_OBJ(&sub_sym,&sub_fun);
+obj_t sub_dcell=CONS_OBJ(&sub_def,&add_dcell);
+void s_mult() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(mult(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t mult_sym=CONSTANT(*);
+obj_t mult_fun=FUNCTION_OBJ(&s_mult);
+obj_t mult_def=CONS_OBJ(&mult_sym,&mult_fun);
+obj_t mult_dcell=CONS_OBJ(&mult_def,&sub_dcell);
+void s_divd() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(divd(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t divd_sym=CONSTANT(/);
+obj_t divd_fun=FUNCTION_OBJ(&s_divd);
+obj_t divd_def=CONS_OBJ(&divd_sym,&divd_fun);
+obj_t divd_dcell=CONS_OBJ(&divd_def,&mult_dcell);
+obj_t *DICT=&divd_dcell;
 #endif

@@ -14,7 +14,7 @@ for (@ARGV) {
 	open(my $file,'<',$_) or die "$_ does not exist\n";
 	while (my $line = <$file>) {
 		my ($lname,$argc,$cname)=($line=~/core\((.*),([0-9]+)\) ([^(]+)/g) or next;
-		print $dict "void s_",lc $lname,"() {\n";
+		print $dict "void s_",lc $cname,"() {\n";
 		print $dict "\tobj_t *$_=pop();\n" for (@alphabet[0..$argc-1]);
 		print $dict "\tpush($cname(";
 		for (0..$argc-1) {
@@ -25,7 +25,7 @@ for (@ARGV) {
 		print $dict "\tdec_rc($alphabet[$argc-1-$_]);\n" for (0..$argc-1);
 		print $dict "}\n";
 		print $dict "obj_t ${cname}_sym=CONSTANT($lname);\n";
-		print $dict "obj_t ${cname}_fun=FUNCTION_OBJ(&s_",lc $lname,");\n";
+		print $dict "obj_t ${cname}_fun=FUNCTION_OBJ(&s_",lc $cname,");\n";
 		print $dict "obj_t ${cname}_def=CONS_OBJ(&${cname}_sym,&${cname}_fun);\n";
 		print $dict "obj_t ${cname}_dcell=CONS_OBJ(&${cname}_def,&$last);\n";
 		$last="${cname}_dcell";
