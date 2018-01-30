@@ -496,4 +496,11 @@ core(LOAD,1) load(obj_t *obj)
 	free(file);
 	return o;
 }
+core(EVAL,1) eval(obj_t *obj)
+{
+	obj_t *f=lambda(NIL,obj);
+	obj_t *r=funcall(f);
+	dec_rc(f);
+	return r;
+}
 #endif

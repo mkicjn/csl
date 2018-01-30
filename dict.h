@@ -254,5 +254,14 @@ obj_t load_sym=CONSTANT(LOAD);
 obj_t load_fun=FUNCTION_OBJ(&s_load);
 obj_t load_def=CONS_OBJ(&load_sym,&load_fun);
 obj_t load_dcell=CONS_OBJ(&load_def,&funcall_dcell);
-obj_t *DICT=&load_dcell;
+void s_eval() {
+	obj_t *a=pop();
+	push(eval(a));
+	dec_rc(a);
+}
+obj_t eval_sym=CONSTANT(EVAL);
+obj_t eval_fun=FUNCTION_OBJ(&s_eval);
+obj_t eval_def=CONS_OBJ(&eval_sym,&eval_fun);
+obj_t eval_dcell=CONS_OBJ(&eval_def,&load_dcell);
+obj_t *DICT=&eval_dcell;
 #endif
