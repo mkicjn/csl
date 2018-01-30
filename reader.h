@@ -153,7 +153,7 @@ obj_t *to_obj(char *s)
 		obj=new_dobj(strtod(tok,NULL));
 		break;
 	default:
-		obj=NIL;
+		obj=&ERROR_OBJ;
 	}
 	free(tok);
 	return q?quote(obj):obj;
