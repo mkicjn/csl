@@ -397,7 +397,7 @@ core(SEE,1) see(obj_t *func)
 	obj_t **f=(obj_t **)func->car;
 	obj_t *list=NIL;
 	for (int i=size-1;i>1;i--)
-		list=cons(f[i],list);
+		list=cons(f[i]->type==FUNCTION?see(f[i]):f[i],list);
 	list=cons(f[0],cons(f[1],cons(list,NIL)));
 	return list;
 }
@@ -435,7 +435,7 @@ RETURN_TOS:
 }
 void do_body(obj_t **b,long size)
 {
-	for (int i=2;i<size;i++) {// TODO: Abstract
+	for (int i=2;i<size;i++) { // TODO: Abstract
 		obj_t *obj=b[i];
 		if (obj==&ARGS) {
 			push(&ARGS);
