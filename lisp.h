@@ -431,9 +431,11 @@ core(FUNCALL,1) funcall(obj_t *func)
 	obj_t **f=(obj_t **)func->car;
 	obj_t *old_env=ENV;
 	ENV=f[0];
+	inc_rc(ENV);
 	bind_args(f[1]);
 	//define(SELF,func);
 	do_body(f,func->cdr);
+	dec_rc(ENV);
 	ENV=old_env;
 RETURN_TOS:
 	stackitem(0)->refs-=stackitem(0)->refs>0;
