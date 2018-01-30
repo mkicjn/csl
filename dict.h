@@ -341,5 +341,14 @@ obj_t eqn_sym=CONSTANT(=);
 obj_t eqn_fun=FUNCTION_OBJ(&s_eqn);
 obj_t eqn_def=CONS_OBJ(&eqn_sym,&eqn_fun);
 obj_t eqn_dcell=CONS_OBJ(&eqn_def,&lt_dcell);
-obj_t *DICT=&eqn_dcell;
+void s_lrand() {
+	obj_t *a=pop();
+	push(lrand(a));
+	dec_rc(a);
+}
+obj_t lrand_sym=CONSTANT(RAND);
+obj_t lrand_fun=FUNCTION_OBJ(&s_lrand);
+obj_t lrand_def=CONS_OBJ(&lrand_sym,&lrand_fun);
+obj_t lrand_dcell=CONS_OBJ(&lrand_def,&eqn_dcell);
+obj_t *DICT=&lrand_dcell;
 #endif
