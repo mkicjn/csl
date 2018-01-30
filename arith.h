@@ -3,7 +3,7 @@
 #include "lisp.h"
 static bool is_num(obj_t *obj)
 {
-	return obj->type==INTEGER&&obj->type==DOUBLE;
+	return obj->type==INTEGER||obj->type==DOUBLE;
 }
 core(+,2) add(obj_t *a,obj_t *b)
 {
@@ -46,5 +46,29 @@ core(/,2) divd(obj_t *a,obj_t *b)
 	double n1=a->type==INTEGER?(double)a->car:((dobj_t *)a)->car;
 	double n2=b->type==INTEGER?(double)b->car:((dobj_t *)b)->car;
 	return new_dobj(n1/n2);
+}
+core(>,2) gt(obj_t *a,obj_t *b)
+{
+	if (!is_num(a)||!is_num(b))
+		return &ERROR_OBJ;
+	double n1=a->type==INTEGER?(double)a->car:((dobj_t *)a)->car;
+	double n2=b->type==INTEGER?(double)b->car:((dobj_t *)b)->car;
+	return n1>n2?T:NIL;
+}
+core(<,2) lt(obj_t *a,obj_t *b)
+{
+	if (!is_num(a)||!is_num(b))
+		return &ERROR_OBJ;
+	double n1=a->type==INTEGER?(double)a->car:((dobj_t *)a)->car;
+	double n2=b->type==INTEGER?(double)b->car:((dobj_t *)b)->car;
+	return n1<n2?T:NIL;
+}
+core(=,2) eqn(obj_t *a,obj_t *b)
+{
+	if (!is_num(a)||!is_num(b))
+		return &ERROR_OBJ;
+	double n1=a->type==INTEGER?(double)a->car:((dobj_t *)a)->car;
+	double n2=b->type==INTEGER?(double)b->car:((dobj_t *)b)->car;
+	return n1==n2?T:NIL;
 }
 #endif

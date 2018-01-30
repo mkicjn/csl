@@ -308,5 +308,38 @@ obj_t divd_sym=CONSTANT(/);
 obj_t divd_fun=FUNCTION_OBJ(&s_divd);
 obj_t divd_def=CONS_OBJ(&divd_sym,&divd_fun);
 obj_t divd_dcell=CONS_OBJ(&divd_def,&mult_dcell);
-obj_t *DICT=&divd_dcell;
+void s_gt() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(gt(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t gt_sym=CONSTANT(>);
+obj_t gt_fun=FUNCTION_OBJ(&s_gt);
+obj_t gt_def=CONS_OBJ(&gt_sym,&gt_fun);
+obj_t gt_dcell=CONS_OBJ(&gt_def,&divd_dcell);
+void s_lt() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(lt(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t lt_sym=CONSTANT(<);
+obj_t lt_fun=FUNCTION_OBJ(&s_lt);
+obj_t lt_def=CONS_OBJ(&lt_sym,&lt_fun);
+obj_t lt_dcell=CONS_OBJ(&lt_def,&gt_dcell);
+void s_eqn() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(eqn(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t eqn_sym=CONSTANT(=);
+obj_t eqn_fun=FUNCTION_OBJ(&s_eqn);
+obj_t eqn_def=CONS_OBJ(&eqn_sym,&eqn_fun);
+obj_t eqn_dcell=CONS_OBJ(&eqn_def,&lt_dcell);
+obj_t *DICT=&eqn_dcell;
 #endif
