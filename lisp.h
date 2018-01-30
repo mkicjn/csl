@@ -423,6 +423,8 @@ void bind_args(obj_t *argn)
 void do_body(obj_t **f,long size);
 core(FUNCALL,1) funcall(obj_t *func)
 {
+	if (func->type!=FUNCTION)
+		return &ERROR_OBJ;
 	if (func->refs<0) {
 		void (*cf)()=(void *)func->car;
 		cf();
