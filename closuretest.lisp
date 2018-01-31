@@ -1,5 +1,5 @@
 (progn
-  (declare 'creature (lambda '(n h) (copy '(lambda '(a) (copy '(cond ((eq a 'name) n) ((eq a 'health) h)))))))
+  (declare 'creature (lambda '(n h) '(lambda '(a) (copy '(cond ((eq a 'name) n) ((eq a 'health) h))))))
   (declare 'nth (lambda '(n l) '(cond ((= n 0) (car l)) (t (nth (- n 1) (cdr l))))))
   (declare 'randelt (lambda '(l) '(nth (random (length l)) l)))
   (declare '*names* '(Zombie Skeleton Ghost Ghoul Necromancer))
