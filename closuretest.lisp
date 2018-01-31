@@ -11,7 +11,6 @@
   (mapcar print_creature *baddies*)
   (declare 'loop (lambda nil '(progn (define 'input (read 200))
 				     (cond ((eq (car input) 'damage) (damage (nth (car (cdr input)) *baddies*))))
-				     (cond ((null (eq input 'quit)) (progn (mapcar print_creature *baddies*) (loop))))
-				     nil)))
+				     (cond ((null (eq input 'quit)) (progn (mapcar print_creature *baddies*) (loop)))))))
   (loop)
   t)
