@@ -26,9 +26,10 @@ int main(int argc,char **argv)
 		l_exit();
 	}
 	for (;;) {
+		printf("* ");
 		push(lread(200));
 		s_eval();
-		terpri();
+		printf("\n=> ");
 		s_print();
 		terpri();
 		drop();
