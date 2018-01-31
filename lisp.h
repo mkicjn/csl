@@ -423,6 +423,7 @@ void bind_args(obj_t *argn)
 void do_body(obj_t **f,long size);
 core(FUNCALL,1) funcall(obj_t *func)
 {
+	static obj_t *last_call=NULL;
 	if (func->type!=FUNCTION)
 		return &ERROR_OBJ;
 	if (func->refs<0) {
@@ -433,7 +434,9 @@ core(FUNCALL,1) funcall(obj_t *func)
 	obj_t **f=(obj_t **)func->car;
 	obj_t *old_env=ENV;
 	ENV=f[0];
-	inc_rc(f[0]);
+	if (func!=last_call)
+		inc_rc(f[0]);
+	last_call=func;
 	bind_args(f[1]);
 	//define(SELF,func);
 	do_body(f,func->cdr);
