@@ -346,7 +346,7 @@ void s_lrand() {
 	push(lrand(a));
 	dec_rc(a);
 }
-obj_t lrand_sym=CONSTANT(RAND);
+obj_t lrand_sym=CONSTANT(RANDOM);
 obj_t lrand_fun=FUNCTION_OBJ(&s_lrand);
 obj_t lrand_def=CONS_OBJ(&lrand_sym,&lrand_fun);
 obj_t lrand_dcell=CONS_OBJ(&lrand_def,&eqn_dcell);

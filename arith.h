@@ -71,7 +71,7 @@ core(=,2) eqn(obj_t *a,obj_t *b)
 	double n2=b->type==INTEGER?(double)b->car:((dobj_t *)b)->car;
 	return n1==n2?T:NIL;
 }
-core(RAND,1) lrand(obj_t *obj)
+core(RANDOM,1) lrand(obj_t *obj)
 {
 	if (obj->type!=INTEGER)
 		return &ERROR_OBJ;
