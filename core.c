@@ -371,7 +371,9 @@ core(LOAD,1) load(obj_t *obj)
 		return &ERROR_OBJ;
 	obj_t *o=to_obj(file);
 	free(file);
-	return o;
+	obj_t *e=eval(o);
+	dec_rc(o);
+	return e;
 }
 core(EVAL,1) eval(obj_t *obj)
 {
