@@ -13,4 +13,4 @@ A garbage-collected rewrite of stacklisp in C
 
 To see a list of all primitive functions in the language, do `cat *.{c,h} | sed -n 's/^[^#]*core(\([^,]*\).*/\1/p'`
 
-To see function prototypes for all C functions, do `cat *.{c,h} | grep -P '^[^#\t]* [^()=]+\(.*\)' | sed 's/ \/\/.*$//;s/\([^;]\)$/\1;/;s/\([(,]\)\([^ *)]*\) \(\**\)\w*/\1\2\3/g;;s/\(\w\)\*/\1 \*/g'`
+To see function prototypes for all C functions, do `cat *.{c,h} | grep -P '^[^#\t]* [^()=]+\(.*\)' | sed 's/ \/\/.*$//;s/\([^;]\)$/\1;/;s/\([(,]\)\([^ *)]*\) \(\**\)\w*/\1\2\3/g;s/\(\w\)\*/\1 \*/g'`
