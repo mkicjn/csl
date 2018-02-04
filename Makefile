@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS=-O3 -g
+CFLAGS=-O3
 
 csl: repl.c src/*.c
 	ls src/*.h | sed -n 's/.*\.h/#include \"&\"/p' > lisp.h
