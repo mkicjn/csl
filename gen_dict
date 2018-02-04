@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
-open(my $dictc,'>','dict.c');
-open(my $dicth,'>','dict.h');
+open(my $dictc,'>','src/dict.c');
+open(my $dicth,'>','src/dict.h');
 print $dicth
 "#ifndef DICTIONARY_H\
 #define DICTIONARY_H\
@@ -12,8 +12,9 @@ print $dictc "#include \"dict.h\"\n";
 my @alphabet=('a'..'z');
 my $last='NIL_OBJ';
 for (@ARGV) {
+	$_=~s/^src\///;
 	print $dicth "#include \"$_\"\n";
-	open(my $file,'<',$_) or die "$_ does not exist\n";
+	open(my $file,'<',"src/$_") or die "src/$_ does not exist\n";
 	while (my $line = <$file>) {
 		my ($lname,$argc,$cname)=($line=~/core\((.*),([0-9]+)\) ([^(]+)/g) or next;
 		print $dicth "void s_",lc $cname,"();\n";
