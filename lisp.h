@@ -178,7 +178,8 @@ void print_cell(obj_t *obj)
 	}
 	putchar(')');
 }
-core(TERPRI,0) terpri() {
+core(TERPRI,0) terpri()
+{
 	putchar('\n');
 	return NIL;
 }

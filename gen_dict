@@ -14,7 +14,7 @@ for (@ARGV) {
 	open(my $file,'<',$_) or die "$_ does not exist\n";
 	while (my $line = <$file>) {
 		my ($lname,$argc,$cname)=($line=~/core\((.*),([0-9]+)\) ([^(]+)/g) or next;
-		print $dict "void s_",lc $cname,"() {\n";
+		print $dict "void s_",lc $cname,"()\n{\n";
 		print $dict "\tobj_t *$_=pop();\n" for (@alphabet[0..$argc-1]);
 		print $dict "\tpush($cname(";
 		for (0..$argc-1) {
