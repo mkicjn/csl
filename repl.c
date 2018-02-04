@@ -25,9 +25,15 @@ int main(int argc,char **argv)
 		}
 		l_exit();
 	}
+	char input[200];
 	for (;;) {
-		printf("* ");
-		push(lread(200));
+		input[0]=0;
+		fgets(input,200,stdin);
+		if (!input[0]) {
+			printf("(EXIT)\n");
+			l_exit();
+		}
+		push(to_obj(input));
 		s_eval();
 		printf("\n=> ");
 		s_print();

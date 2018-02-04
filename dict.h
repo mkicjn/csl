@@ -350,5 +350,16 @@ obj_t lrand_sym=CONSTANT(RANDOM);
 obj_t lrand_fun=FUNCTION_OBJ(&s_lrand);
 obj_t lrand_def=CONS_OBJ(&lrand_sym,&lrand_fun);
 obj_t lrand_dcell=CONS_OBJ(&lrand_def,&eqn_dcell);
-obj_t *DICT=&lrand_dcell;
+void s_lmod() {
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(lmod(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t lmod_sym=CONSTANT(%);
+obj_t lmod_fun=FUNCTION_OBJ(&s_lmod);
+obj_t lmod_def=CONS_OBJ(&lmod_sym,&lmod_fun);
+obj_t lmod_dcell=CONS_OBJ(&lmod_def,&lrand_dcell);
+obj_t *DICT=&lmod_dcell;
 #endif

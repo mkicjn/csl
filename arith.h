@@ -77,4 +77,13 @@ core(RANDOM,1) lrand(obj_t *obj)
 		return &ERROR_OBJ;
 	return new_obj(INTEGER,rand()%obj->car,0);
 }
+core(%,2) lmod(obj_t *a,obj_t *b)
+{
+	if (!is_num(a)||!is_num(b))
+		return &ERROR_OBJ;
+	// Avoid floating point modulo for now to avoid -lm
+	if (a->type!=INTEGER||b->type!=INTEGER)
+		return &ERROR_OBJ;
+	return new_obj(INTEGER,a->car%b->car,0);
+}
 #endif

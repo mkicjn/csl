@@ -503,8 +503,10 @@ core(LOAD,1) load(obj_t *obj)
 core(EVAL,1) eval(obj_t *obj)
 {
 	obj_t *f=lambda(NIL,obj);
-	obj_t *r=funcall(f);
+	do_body((obj_t **)f->car,f->cdr);
 	dec_rc(f);
+	obj_t *r=pop();
+	r->refs-=r->refs>0;
 	return r;
 }
 #endif

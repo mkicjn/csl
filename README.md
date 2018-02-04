@@ -7,3 +7,4 @@ A garbage-collected rewrite of stacklisp in C
 * Find and fix more of the rare issues with memory management
 * More math functions
 * Formatted output
+* List splicing
