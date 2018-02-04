@@ -312,15 +312,17 @@ core(FUNCALL,1) funcall(obj_t *func)
 	last_call=func;
 	bind_args(f[1]);
 	//define(SELF,func);
-	do_body(f,func->cdr);
+	do_body(func);
 	dec_rc(ENV);
 	ENV=old_env;
 RETURN_TOS:
 	stackitem(0)->refs-=stackitem(0)->refs>0;
 	return pop();
 }
-void do_body(obj_t **b,long size)
+void do_body(obj_t *func)
 {
+	obj_t **b=(obj_t **)func->car;
+	long size=func->cdr;
 	for (int i=2;i<size;i++) { // TODO: Abstract
 		obj_t *obj=b[i];
 		if (obj==&ARGS) {
@@ -338,7 +340,7 @@ void do_body(obj_t **b,long size)
 			obj_t *o=pop();
 			i++;
 			if (o!=NIL) {
-				do_body((obj_t **)b[i]->car,b[i]->cdr);
+				do_body(b[i]);
 				for (;b[i]!=&COND_END;i++);
 			}
 			dec_rc(o);
@@ -378,7 +380,7 @@ core(LOAD,1) load(obj_t *obj)
 core(EVAL,1) eval(obj_t *obj)
 {
 	obj_t *f=lambda(NIL,obj);
-	do_body((obj_t **)f->car,f->cdr);
+	do_body(f);
 	dec_rc(f);
 	obj_t *r=pop();
 	r->refs-=r->refs>0;

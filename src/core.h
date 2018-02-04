@@ -12,7 +12,6 @@
 core(CAR,1) car(obj_t *);
 core(CDR,1) cdr(obj_t *);
 core(CONS,2) cons(obj_t *,obj_t *);
-void print_cell(obj_t *);
 core(PRINT,1) print(obj_t *);
 void print_cell(obj_t *);
 core(TERPRI,0) terpri();
@@ -38,9 +37,8 @@ core(LENGTH,1) l_length(obj_t *);
 core(LAMBDA,2) lambda(obj_t *,obj_t *);
 core(SEE,1) see(obj_t *);
 void bind_args(obj_t *);
-void do_body(obj_t **,long);
 core(FUNCALL,1) funcall(obj_t *);
-void do_body(obj_t **,long);
+void do_body(obj_t *);
 char *slurp(char *);
 core(LOAD,1) load(obj_t *);
 core(EVAL,1) eval(obj_t *);
