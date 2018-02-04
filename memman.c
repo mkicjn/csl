@@ -1,7 +1,7 @@
 #include "memman.h"
 obj_t *new_obj(type_t type,long car,long cdr)
 {
-	obj_t *obj=malloc(sizeof(obj_t));
+	obj_t *obj=new(obj_t);
 	obj->type=type;
 	obj->car=car;
 	obj->cdr=cdr;
@@ -11,7 +11,7 @@ obj_t *new_obj(type_t type,long car,long cdr)
 obj_t *new_dobj(double car)
 {
 	// This function exists to circumvent implicit typecasting
-	obj_t *obj=malloc(sizeof(obj_t));
+	obj_t *obj=new(obj_t);
 	obj->type=DOUBLE;
 	((dobj_t *)obj)->car=car;
 	obj->cdr=0;

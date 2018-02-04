@@ -3,11 +3,6 @@
 #include <string.h>
 #include <time.h>
 #include "lisp.h"
-#include "stack.h"
-#include "reader.h"
-#include "dict.h"
-#include "rpn.h"
-#include "arith.h"
 static void push_sym(const char *str)
 {
 	int len=strlen(str)+1;

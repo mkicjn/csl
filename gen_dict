@@ -1,37 +1,43 @@
 #!/usr/bin/perl
 use strict;
-open(my $dict,">",'dict.h');
-print $dict
+open(my $dictc,'>','dict.c');
+open(my $dicth,'>','dict.h');
+print $dicth
 "#ifndef DICTIONARY_H\
 #define DICTIONARY_H\
 #include \"stack.h\"\
 #define FUNCTION_OBJ(x) {.type=FUNCTION,.car=(long)x,.cdr=-1,.refs=-1}\
 #define CONS_OBJ(x,y) {.type=CELL,.car=(long)x,.cdr=(long)y,.refs=-1}\n";
+print $dictc "#include \"dict.h\"\n";
 my @alphabet=('a'..'z');
 my $last='NIL_OBJ';
 for (@ARGV) {
-	print $dict "#include \"$_\"\n";
+	print $dicth "#include \"$_\"\n";
 	open(my $file,'<',$_) or die "$_ does not exist\n";
 	while (my $line = <$file>) {
 		my ($lname,$argc,$cname)=($line=~/core\((.*),([0-9]+)\) ([^(]+)/g) or next;
-		print $dict "void s_",lc $cname,"()\n{\n";
-		print $dict "\tobj_t *$_=pop();\n" for (@alphabet[0..$argc-1]);
-		print $dict "\tpush($cname(";
+		print $dicth "void s_",lc $cname,"();\n";
+		print $dictc "void s_",lc $cname,"()\n{\n";
+		print $dictc "\tobj_t *$_=pop();\n" for (@alphabet[0..$argc-1]);
+		print $dictc "\tpush($cname(";
 		for (0..$argc-1) {
-			print $dict $alphabet[$argc-1-$_];
-			print $dict ',' if ($_<$argc-1);
+			print $dictc $alphabet[$argc-1-$_];
+			print $dictc ',' if ($_<$argc-1);
 		}
-		print $dict "));\n";
-		print $dict "\tdec_rc($alphabet[$argc-1-$_]);\n" for (0..$argc-1);
-		print $dict "}\n";
-		print $dict "obj_t ${cname}_sym=CONSTANT($lname);\n";
-		print $dict "obj_t ${cname}_fun=FUNCTION_OBJ(&s_",lc $cname,");\n";
-		print $dict "obj_t ${cname}_def=CONS_OBJ(&${cname}_sym,&${cname}_fun);\n";
-		print $dict "obj_t ${cname}_dcell=CONS_OBJ(&${cname}_def,&$last);\n";
+		print $dictc "));\n";
+		print $dictc "\tdec_rc($alphabet[$argc-1-$_]);\n" for (0..$argc-1);
+		print $dictc "}\n";
+		print $dictc "obj_t ${cname}_sym=CONSTANT($lname);\n";
+	#	print $dicth "extern obj_t ${cname}_sym;\n";
+		print $dictc "obj_t ${cname}_fun=FUNCTION_OBJ(&s_",lc $cname,");\n";
+		print $dictc "obj_t ${cname}_def=CONS_OBJ(&${cname}_sym,&${cname}_fun);\n";
+		print $dictc "obj_t ${cname}_dcell=CONS_OBJ(&${cname}_def,&$last);\n";
 		$last="${cname}_dcell";
 	}
 	close($file);
 }
-print $dict "obj_t *DICT=&$last;\n";
-print $dict "#endif\n";
-close($dict);
+print $dicth "extern obj_t *DICT;\n";
+print $dictc "obj_t *DICT=&$last;\n";
+print $dicth "#endif\n";
+close($dictc);
+close($dicth);

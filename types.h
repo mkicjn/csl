@@ -12,4 +12,5 @@ typedef struct {
 	double car,cdr;
 	int refs;
 } dobj_t; // To avoid typecasting double->long
+#define core(name,argc) obj_t * // Info for dictionary code generator
 #endif
