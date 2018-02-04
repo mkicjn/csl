@@ -38,6 +38,6 @@ int main(int argc,char **argv)
 		printf("\n=> ");
 		s_print();
 		terpri();
-		drop();
+		dec_rc(pop());
 	}
 }

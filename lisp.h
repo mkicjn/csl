@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "memman.h"
 #include "types.h"
+#include "stack.h"
 // Constants
 #define CONSTANT(x) {	\
 	.type=SYMBOL,	\
@@ -259,11 +260,10 @@ core(SYMVAL,1) symval(obj_t *obj)
 	return &ERROR_OBJ;
 }
 extern obj_t *stackitem(int);
-extern void drop();
 core(EXIT,0) l_exit()
 {
 	while (stackitem(0))
-		drop();
+		dec_rc(pop());
 	dec_rc(ENV);
 	dec_rc(DICT);
 	exit(0);
@@ -375,7 +375,7 @@ void do_body(obj_t **b,long size)
 			dec_rc(f);
 			nip(); // Remove <ARGS>
 		} else if (obj==&DROP) {
-			drop();
+			dec_rc(pop());
 		} else if (obj==&COND_END) {
 			push(NIL);
 		} else if (obj==&COND_DO) {
