@@ -80,8 +80,6 @@ obj_t *quote(obj_t *obj)
 		return obj;
 	return cons(QUOTE,cons(obj,NIL));
 }
-obj_t *to_obj(char *);
-extern void s_cons();
 obj_t *to_list(char *s)
 {
 	push(NULL); // Marker for front of list
@@ -119,6 +117,8 @@ obj_t *to_list(char *s)
 obj_t *to_obj(char *s)
 {
 	obj_t *obj;
+	if (*s=='`')
+		return to_splice(s+2);
 	bool q=*s=='\'';
 	char *tok=get_token(s);
 	switch (infer_type(tok)) {
@@ -155,3 +155,24 @@ obj_t *to_obj(char *s)
 	free(tok);
 	return q?quote(obj):obj;
 }
+/*
+ * (declare 'b '(b))
+ * `(a :b c) => (cons (quote a) (cons b (cons (quote c) nil))) => (a (b) c)
+ * `(a \b c) => (cons (quote a) (append b (cons (quote c) nil))) => (a b c)
+ */
+obj_t *to_splice(char *str)
+{	// Expects same argument format as to_list, +2
+	bool u=*str==':';
+	bool s=*str=='\\';
+	char *tok=get_token(str+u+s);
+	if (!tok)
+		return NIL;
+	int len=strlen(tok)+u+s;
+	obj_t *f=s?&append_fun:&cons_fun;
+	obj_t *o=to_obj(tok);
+	free(tok);
+	o=u||s?o:quote(o);
+	// (f o (@ (+ str len 1))))
+	return cons(f,cons(o,cons(to_splice(str+len+1),NIL)));
+}
+

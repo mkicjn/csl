@@ -5,6 +5,7 @@
 #include <string.h>
 #include "consts.h"
 #include "core.h"
+#include "dict.h"
 #include "memman.h"
 #include "stack.h"
 #include "types.h"
@@ -19,4 +20,5 @@ obj_t *to_obj(char *);
 extern void s_cons();
 obj_t *to_list(char *);
 obj_t *to_obj(char *);
+obj_t *to_splice(char *);
 #endif

@@ -3,13 +3,13 @@ core(CAR,1) car(obj_t *obj)
 {
 	if (obj->type==CELL)
 		return (obj_t *)obj->car;
-	return &ERROR_OBJ;
+	{printf("Returning error from car\n"); return &ERROR_OBJ;}
 }
 core(CDR,1) cdr(obj_t *obj)
 {
 	if (obj->type==CELL)
 		return (obj_t *)obj->cdr;
-	return &ERROR_OBJ;
+	{printf("Returning error from cdr\n"); return &ERROR_OBJ;}
 }
 core(CONS,2) cons(obj_t *obj1,obj_t *obj2)
 {
@@ -87,7 +87,7 @@ core(EQ,2) eq(obj_t *obj1,obj_t *obj2)
 core(SET,2) set(obj_t *obj1,obj_t *obj2)
 {
 	if (obj1->refs<0)
-		return &ERROR_OBJ;
+		{printf("Returning error from set\n"); return &ERROR_OBJ;}
 	// Free memory from old contents if appropriate
 	switch (obj1->type) {
 	case CELL:
@@ -124,7 +124,7 @@ core(SET,2) set(obj_t *obj1,obj_t *obj2)
 core(RPLACA,2) rplaca(obj_t *obj1,obj_t *obj2)
 {
 	if (obj1->refs<0||obj1->type!=CELL)
-		return &ERROR_OBJ;
+		{printf("Returning error from rplaca\n"); return &ERROR_OBJ;}
 	dec_rc((obj_t *)obj1->car);
 	inc_rc(obj2);
 	obj1->car=(long)obj2;
@@ -133,7 +133,7 @@ core(RPLACA,2) rplaca(obj_t *obj1,obj_t *obj2)
 core(RPLACD,2) rplacd(obj_t *obj1,obj_t *obj2)
 {
 	if (obj1->refs<0||obj1->type!=CELL)
-		return &ERROR_OBJ;
+		{printf("Returning error from rplacd\n"); return &ERROR_OBJ;}
 	dec_rc((obj_t *)obj1->cdr);
 	inc_rc(obj2);
 	obj1->cdr=(long)obj2;
@@ -149,7 +149,7 @@ obj_t *lread(long n) // lread - read(long)
 core(READ,1) oread(obj_t *obj) // oread - read(object)
 {
 	if (obj->type!=INTEGER)
-		return &ERROR_OBJ;
+		{printf("Returning error from read\n"); return &ERROR_OBJ;}
 	return lread(obj->car);
 }
 core(ATOM,1) atom(obj_t *obj)
@@ -163,7 +163,7 @@ core(NULL,1) null(obj_t *obj)
 core(NCONC,2) nconc(obj_t *obj1,obj_t *obj2)
 {
 	if (obj1->type!=CELL)
-		return &ERROR_OBJ;
+		{printf("Returning error from nconc\n"); return &ERROR_OBJ;}
 	obj_t *o=obj1;
 	for (;cdr(o)->type==CELL;o=(obj_t *)o->cdr);
 	rplacd(o,obj2);
@@ -189,7 +189,7 @@ core(APPEND,2) append(obj_t *obj1,obj_t *obj2)
 core(ASSOC,2) assoc(obj_t *sym,obj_t *list)
 {
 	if (list->type!=CELL)
-		return &ERROR_OBJ;
+		{printf("Returning error from assoc\n"); return &ERROR_OBJ;}
 	for (obj_t *o=list;o!=NIL;o=cdr(o))
 		if (eq(sym,car(car(o)))==T)
 			return car(o);
@@ -198,14 +198,14 @@ core(ASSOC,2) assoc(obj_t *sym,obj_t *list)
 core(DECLARE,2) declare(obj_t *sym,obj_t *def)
 {
 	if (sym->refs<0)
-		return &ERROR_OBJ;
+		{printf("Returning error from declare\n"); return &ERROR_OBJ;}
 	DICT=cons(cons(sym,def),DICT);
 	return sym;
 }
 core(DEFINE,2) define(obj_t *sym,obj_t *def)
 {
 	if (sym->refs<0&&sym!=SELF)
-		return &ERROR_OBJ;
+		{printf("Returning error from define\n"); return &ERROR_OBJ;}
 	ENV=cons(cons(sym,def),ENV);
 	return sym;
 }
@@ -221,7 +221,7 @@ core(SYMVAL,1) symval(obj_t *obj)
 	def=assoc(obj,ENV);
 	if (def!=NIL)
 		return cdr(def);
-	return &ERROR_OBJ;
+	{printf("Returning error from symval\n"); return &ERROR_OBJ;}
 }
 core(EXIT,0) l_exit()
 {
@@ -298,7 +298,7 @@ core(FUNCALL,1) funcall(obj_t *func)
 {
 	static obj_t *last_call=NULL;
 	if (func->type!=FUNCTION)
-		return &ERROR_OBJ;
+		{printf("Returning error from funcall"); print(func); terpri(); return &ERROR_OBJ;}
 	if (func->refs<0) {
 		void (*cf)()=(void *)func->car;
 		cf();
@@ -365,10 +365,10 @@ char *slurp(char *file)
 core(LOAD,1) load(obj_t *obj)
 {
 	if (obj->type!=SYMBOL)
-		return &ERROR_OBJ;
+		{printf("Returning error from load\n"); return &ERROR_OBJ;}
 	char *file=slurp((char *)obj->car);
 	if (!file)
-		return &ERROR_OBJ;
+		{printf("Returning error from load\n"); return &ERROR_OBJ;}
 	obj_t *o=to_obj(file);
 	free(file);
 	obj_t *e=eval(o);
