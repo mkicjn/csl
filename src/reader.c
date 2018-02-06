@@ -172,7 +172,7 @@ obj_t *to_splice(char *str)
 	str+=s;
 	bool q=*str=='\'';
 	str+=q;
-	bool bq=str[1]=='`';
+	bool bq=*str=='`';
 	str+=bq;
 	char *tok=get_token(str);
 	if (!tok)
