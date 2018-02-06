@@ -45,6 +45,8 @@ char *get_word(char *s)
 {
 	register int c=0;
 	for (;s[c]&&s[c]!=' '&&s[c]!='\t'&&s[c]!='\n'&&s[c]!=')';c++); // Count characters
+	if (!c)
+		return NULL;
 	return memcpy(calloc(c+1,1),s,c);
 }
 char *get_list(char *s)
@@ -161,23 +163,31 @@ obj_t *to_obj(char *s)
 	free(tok);
 	return q?quote(obj):obj;
 }
-/*
- * (declare 'b '(b))
- * `(a :b c) => (cons (quote a) (cons b (cons (quote c) nil))) => (a (b) c)
- * `(a \b c) => (cons (quote a) (append b (cons (quote c) nil))) => (a b c)
- */
 obj_t *to_splice(char *str)
-{	// Expects same argument format as to_list, +2
-	bool u=*str==':',s=*str=='\\',bq=str[1]=='`';
-	char *tok=get_token(str+u+s+bq);
+{	// Expects list string after parenthesis
+	str=ltrim(str);
+	bool u=*str==':';
+	str+=u;
+	bool s=*str=='\\';
+	str+=s;
+	bool q=*str=='\'';
+	str+=q;
+	bool bq=str[1]=='`';
+	str+=bq;
+	char *tok=get_token(str);
 	if (!tok)
 		return NIL;
-	int len=strlen(tok)+u+s+bq;
-	obj_t *f=s?&append_fun:&cons_fun;
-	obj_t *o=bq?to_splice(tok+1):to_obj(tok);
+	int len=strlen(tok);
+	obj_t *f=s?&append_fun:&cons_fun,*o;
+	if (bq)
+		o=to_splice(tok+1);
+	else
+		o=to_obj(tok);
+	if (q)
+		o=quote(o);
 	free(tok);
 	o=u||s?o:quote(o);
 	// (f o (@ (+ str len 1))))
-	return cons(f,cons(o,cons(to_splice(str+len+1),NIL)));
+	return cons(f,cons(o,cons(to_splice(str+len),NIL)));
 }
 
