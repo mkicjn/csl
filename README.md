@@ -6,6 +6,7 @@ A garbage-collected rewrite of stacklisp in C
 * Find and fix more of the rare issues with memory management
 * More math functions
 * Formatted output
+* Better error handling
 
 To see a list of all primitive functions in the language, do `cat *.{c,h} | sed -n 's/^[^#]*core(\([^,]*\).*/\1/p'`
 

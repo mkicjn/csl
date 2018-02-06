@@ -19,7 +19,7 @@ type_t infer_type(char *s)
 {
 	if (!s)
 		return ERROR;
-	s+=*s=='\''; // Skip apostrophe if quoted
+	s+=*s=='\''||*s=='`'; // Skip backtick or apostrophe
 	if (*s=='(')
 		return valid_list(s)?CELL:ERROR;
 	if (*s=='-') {
@@ -68,7 +68,7 @@ char *get_token(char *s)
 	s=ltrim(s);
 	if (!*s)
 		return NULL;
-	if (*s=='\'')
+	if (*s=='\''||*s=='`')
 		s++;
 	if (*s=='(')
 		return get_list(s);
@@ -88,11 +88,15 @@ obj_t *to_list(char *s)
 		s++;
 	s++;
 	while (*s&&*(s=ltrim(s))!=')') {
-		bool q=*s=='\'';
+		bool q=*s=='\'',bq=*s=='`';
 		char *tok=get_token(s);
 		if (!tok)
 			break;
 		int len=strlen(tok);
+		if (bq) {
+			push(to_splice(tok+1));
+			goto T_L_NEXT_TOK;
+		}
 		if (tok[0]=='.'&&!tok[1]) {
 			dot=true;
 			free(tok);
@@ -100,10 +104,11 @@ obj_t *to_list(char *s)
 			continue;
 		}
 		push(q?quote(to_obj(tok)):to_obj(tok));
+T_L_NEXT_TOK:
 		free(tok);
 		if (dot)
 			break;
-		s+=len+q;
+		s+=len+q+bq;
 	}
 	if (!dot)
 		push(NIL);
@@ -117,13 +122,14 @@ obj_t *to_list(char *s)
 obj_t *to_obj(char *s)
 {
 	obj_t *obj;
-	if (*s=='`')
-		return to_splice(s+2);
-	bool q=*s=='\'';
+	bool q=*s=='\'',bq=*s=='`';
 	char *tok=get_token(s);
 	switch (infer_type(tok)) {
 	case CELL:
-		obj=to_list(tok);
+		if (bq)
+			obj=to_splice(tok+1);
+		else
+			obj=to_list(tok);
 		break;
 	case SYMBOL:
 		if (!strcasecmp(tok,"NIL"))
@@ -162,14 +168,13 @@ obj_t *to_obj(char *s)
  */
 obj_t *to_splice(char *str)
 {	// Expects same argument format as to_list, +2
-	bool u=*str==':';
-	bool s=*str=='\\';
-	char *tok=get_token(str+u+s);
+	bool u=*str==':',s=*str=='\\',bq=str[1]=='`';
+	char *tok=get_token(str+u+s+bq);
 	if (!tok)
 		return NIL;
-	int len=strlen(tok)+u+s;
+	int len=strlen(tok)+u+s+bq;
 	obj_t *f=s?&append_fun:&cons_fun;
-	obj_t *o=to_obj(tok);
+	obj_t *o=bq?to_splice(tok+1):to_obj(tok);
 	free(tok);
 	o=u||s?o:quote(o);
 	// (f o (@ (+ str len 1))))
