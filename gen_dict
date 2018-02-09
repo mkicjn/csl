@@ -10,7 +10,7 @@ print $dicth
 #define CONS_OBJ(x,y) {.type=CELL,.car=(long)x,.cdr=(long)y,.refs=-1}\n";
 print $dictc "#include \"dict.h\"\n";
 my @alphabet=('a'..'z');
-my $last='NIL_OBJ';
+my $last='NIL';
 for (@ARGV) {
 	$_=~s/^src\///;
 	print $dicth "#include \"$_\"\n";

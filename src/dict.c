@@ -8,7 +8,7 @@ void s_car()
 obj_t car_sym=CONSTANT(CAR);
 obj_t car_fun=FUNCTION_OBJ(&s_car);
 obj_t car_def=CONS_OBJ(&car_sym,&car_fun);
-obj_t car_dcell=CONS_OBJ(&car_def,&NIL_OBJ);
+obj_t car_dcell=CONS_OBJ(&car_def,&NIL);
 void s_cdr()
 {
 	obj_t *a=pop();
@@ -285,6 +285,16 @@ obj_t eval_sym=CONSTANT(EVAL);
 obj_t eval_fun=FUNCTION_OBJ(&s_eval);
 obj_t eval_def=CONS_OBJ(&eval_sym,&eval_fun);
 obj_t eval_dcell=CONS_OBJ(&eval_def,&load_dcell);
+void s_type()
+{
+	obj_t *a=pop();
+	push(type(a));
+	dec_rc(a);
+}
+obj_t type_sym=CONSTANT(TYPE);
+obj_t type_fun=FUNCTION_OBJ(&s_type);
+obj_t type_def=CONS_OBJ(&type_sym,&type_fun);
+obj_t type_dcell=CONS_OBJ(&type_def,&eval_dcell);
 void s_add()
 {
 	obj_t *a=pop();
@@ -296,7 +306,7 @@ void s_add()
 obj_t add_sym=CONSTANT(+);
 obj_t add_fun=FUNCTION_OBJ(&s_add);
 obj_t add_def=CONS_OBJ(&add_sym,&add_fun);
-obj_t add_dcell=CONS_OBJ(&add_def,&eval_dcell);
+obj_t add_dcell=CONS_OBJ(&add_def,&type_dcell);
 void s_sub()
 {
 	obj_t *a=pop();

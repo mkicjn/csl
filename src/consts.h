@@ -7,17 +7,11 @@
 	.cdr=0,		\
 	.refs=-1	\
 }
-extern obj_t NIL_OBJ;
 extern obj_t *NIL;
-extern obj_t T_OBJ;
 extern obj_t *T;
-extern obj_t SELF_OBJ;
 extern obj_t *SELF;
-extern obj_t QUOTE_OBJ;
 extern obj_t *QUOTE;
-extern obj_t PROGN_OBJ;
 extern obj_t *PROGN;
-extern obj_t COND_OBJ;
 extern obj_t *COND;
 extern obj_t ERROR_OBJ;
 extern obj_t ARGS;
@@ -27,4 +21,5 @@ extern obj_t COND_DO;
 extern obj_t COND_END;
 extern obj_t *DICT;
 extern obj_t *ENV;
+extern obj_t *type_objs[5];
 #endif

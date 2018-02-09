@@ -384,3 +384,7 @@ core(EVAL,1) eval(obj_t *obj)
 	r->refs-=r->refs>0;
 	return r;
 }
+core(TYPE,1) type(obj_t *obj)
+{
+	return type_objs[obj->type];
+}

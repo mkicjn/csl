@@ -58,6 +58,8 @@ void s_load();
 extern obj_t load_fun;
 void s_eval();
 extern obj_t eval_fun;
+void s_type();
+extern obj_t type_fun;
 #include "arith.h"
 void s_add();
 extern obj_t add_fun;

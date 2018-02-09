@@ -42,4 +42,5 @@ void do_body(obj_t **,long);
 char *slurp(char *);
 core(LOAD,1) load(obj_t *);
 core(EVAL,1) eval(obj_t *);
+core(TYPE,1) type(obj_t *);
 #endif

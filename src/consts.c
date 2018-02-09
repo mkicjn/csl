@@ -18,3 +18,16 @@ obj_t DROP=CONSTANT(<DROP>); // Used in `progn` to discard form evaluations
 obj_t COND_DO=CONSTANT(<COND_DO>);
 obj_t COND_END=CONSTANT(<COND_END>);
 obj_t *ENV=&NIL_OBJ; // Not actually a constant
+// Type objects
+obj_t INTEGER_OBJ=CONSTANT(INTEGER);
+obj_t DOUBLE_OBJ=CONSTANT(DOUBLE);
+obj_t FUNCTION_OBJ=CONSTANT(FUNCTION);
+obj_t CELL_OBJ=CONSTANT(CELL);
+obj_t SYMBOL_OBJ=CONSTANT(SYMBOL);
+obj_t *type_objs[5]={
+	&CELL_OBJ,
+	&SYMBOL_OBJ,
+	&INTEGER_OBJ,
+	&FUNCTION_OBJ,
+	&DOUBLE_OBJ
+};
