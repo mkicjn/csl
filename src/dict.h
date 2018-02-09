@@ -60,6 +60,10 @@ void s_eval();
 extern obj_t eval_fun;
 void s_type();
 extern obj_t type_fun;
+void s_or();
+extern obj_t or_fun;
+void s_and();
+extern obj_t and_fun;
 #include "arith.h"
 void s_add();
 extern obj_t add_fun;

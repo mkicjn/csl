@@ -295,6 +295,30 @@ obj_t type_sym=CONSTANT(TYPE);
 obj_t type_fun=FUNCTION_OBJ(&s_type);
 obj_t type_def=CONS_OBJ(&type_sym,&type_fun);
 obj_t type_dcell=CONS_OBJ(&type_def,&eval_dcell);
+void s_or()
+{
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(or(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t or_sym=CONSTANT(OR);
+obj_t or_fun=FUNCTION_OBJ(&s_or);
+obj_t or_def=CONS_OBJ(&or_sym,&or_fun);
+obj_t or_dcell=CONS_OBJ(&or_def,&type_dcell);
+void s_and()
+{
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(and(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t and_sym=CONSTANT(AND);
+obj_t and_fun=FUNCTION_OBJ(&s_and);
+obj_t and_def=CONS_OBJ(&and_sym,&and_fun);
+obj_t and_dcell=CONS_OBJ(&and_def,&or_dcell);
 void s_add()
 {
 	obj_t *a=pop();
@@ -306,7 +330,7 @@ void s_add()
 obj_t add_sym=CONSTANT(+);
 obj_t add_fun=FUNCTION_OBJ(&s_add);
 obj_t add_def=CONS_OBJ(&add_sym,&add_fun);
-obj_t add_dcell=CONS_OBJ(&add_def,&type_dcell);
+obj_t add_dcell=CONS_OBJ(&add_def,&and_dcell);
 void s_sub()
 {
 	obj_t *a=pop();

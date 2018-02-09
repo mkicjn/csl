@@ -388,3 +388,11 @@ core(TYPE,1) type(obj_t *obj)
 {
 	return type_objs[obj->type];
 }
+core(OR,2) or(obj_t *a,obj_t *b)
+{
+	return a!=NIL||b!=NIL?T:NIL;
+}
+core(AND,2) and(obj_t *a,obj_t *b)
+{
+	return a!=NIL&&b!=NIL?T:NIL;
+}
