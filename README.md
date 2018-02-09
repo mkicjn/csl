@@ -5,6 +5,8 @@ A garbage-collected rewrite of stacklisp in C
 * Manage environments better to make temporary bindings easier
 * Find and fix more of the rare issues with memory management
 * More math functions
+* Logical operators
+* Translation rules for variadic functions and macros
 * Formatted output
 * Better error handling
 

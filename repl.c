@@ -20,10 +20,10 @@ int main(int argc,char **argv)
 		}
 		l_exit();
 	}
-	char input[200];
+	char input[1000];
 	for (;;) {
 		input[0]=0;
-		fgets(input,200,stdin);
+		fgets(input,1000,stdin);
 		if (!input[0]) {
 			printf("(EXIT)\n");
 			l_exit();
