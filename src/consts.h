@@ -7,6 +7,7 @@
 	.cdr=0,		\
 	.refs=-1	\
 }
+extern obj_t NIL_OBJ;
 extern obj_t *NIL;
 extern obj_t *T;
 extern obj_t *SELF;

@@ -8,7 +8,7 @@ void s_car()
 obj_t car_sym=CONSTANT(CAR);
 obj_t car_fun=FUNCTION_OBJ(&s_car);
 obj_t car_def=CONS_OBJ(&car_sym,&car_fun);
-obj_t car_dcell=CONS_OBJ(&car_def,&NIL);
+obj_t car_dcell=CONS_OBJ(&car_def,&NIL_OBJ);
 void s_cdr()
 {
 	obj_t *a=pop();
