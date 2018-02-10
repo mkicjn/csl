@@ -10,7 +10,7 @@ print $dicth
 #define CONS_OBJ(x,y) {.type=CELL,.car=(long)x,.cdr=(long)y,.refs=-1}\n";
 print $dictc "#include \"dict.h\"\n";
 my @alphabet=('a'..'z');
-my $last='NIL';
+my $last='NIL_OBJ';
 for (@ARGV) {
 	$_=~s/^src\///;
 	print $dicth "#include \"$_\"\n";
@@ -32,8 +32,8 @@ for (@ARGV) {
 		print $dicth "extern obj_t ${cname}_fun;\n";
 		print $dictc "obj_t ${cname}_fun=FUNCTION_OBJ(&s_",lc $cname,");\n";
 		print $dictc "obj_t ${cname}_def=CONS_OBJ(&${cname}_sym,&${cname}_fun);\n";
-		print $dictc "obj_t ${cname}_dcell=CONS_OBJ(&${cname}_def,$last);\n";
-		$last="&${cname}_dcell";
+		print $dictc "obj_t ${cname}_dcell=CONS_OBJ(&${cname}_def,&$last);\n";
+		$last="${cname}_dcell";
 	}
 	close($file);
 }
