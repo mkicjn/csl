@@ -1,6 +1,4 @@
 #include "rpn.h"
-obj_t *t_progn(obj_t *);
-obj_t *t_cond(obj_t *);
 obj_t *rpn(obj_t *form)
 {
 	if (form->type!=CELL)

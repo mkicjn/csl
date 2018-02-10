@@ -16,8 +16,6 @@ char *get_word(char *);
 char *get_list(char *);
 char *get_token(char *);
 obj_t *quote(obj_t *);
-obj_t *to_obj(char *);
-extern void s_cons();
 obj_t *to_list(char *);
 obj_t *to_obj(char *);
 obj_t *to_splice(char *);

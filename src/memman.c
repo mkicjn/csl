@@ -18,8 +18,6 @@ obj_t *new_dobj(double car)
 	obj->refs=0;
 	return (obj_t *)obj;
 }
-void dec_rc(obj_t *);
-void destroy_func(obj_t *);
 void destroy(obj_t *obj)
 {
 	switch (obj->type) {
