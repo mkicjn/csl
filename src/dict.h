@@ -60,6 +60,8 @@ void s_eval();
 extern obj_t eval_fun;
 void s_type();
 extern obj_t type_fun;
+void s_typep();
+extern obj_t typep_fun;
 void s_or();
 extern obj_t or_fun;
 void s_and();

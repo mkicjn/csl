@@ -43,6 +43,7 @@ char *slurp(char *);
 core(LOAD,1) load(obj_t *);
 core(EVAL,1) eval(obj_t *);
 core(TYPE,1) type(obj_t *);
+core(TYPEP,2) typep(obj_t *,obj_t *);
 core(OR,2) or(obj_t *,obj_t *);
 core(AND,2) and(obj_t *,obj_t *);
 #endif

@@ -295,6 +295,18 @@ obj_t type_sym=CONSTANT(TYPE);
 obj_t type_fun=FUNCTION_OBJ(&s_type);
 obj_t type_def=CONS_OBJ(&type_sym,&type_fun);
 obj_t type_dcell=CONS_OBJ(&type_def,&eval_dcell);
+void s_typep()
+{
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(typep(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t typep_sym=CONSTANT(TYPEP);
+obj_t typep_fun=FUNCTION_OBJ(&s_typep);
+obj_t typep_def=CONS_OBJ(&typep_sym,&typep_fun);
+obj_t typep_dcell=CONS_OBJ(&typep_def,&type_dcell);
 void s_or()
 {
 	obj_t *a=pop();
@@ -306,7 +318,7 @@ void s_or()
 obj_t or_sym=CONSTANT(OR);
 obj_t or_fun=FUNCTION_OBJ(&s_or);
 obj_t or_def=CONS_OBJ(&or_sym,&or_fun);
-obj_t or_dcell=CONS_OBJ(&or_def,&type_dcell);
+obj_t or_dcell=CONS_OBJ(&or_def,&typep_dcell);
 void s_and()
 {
 	obj_t *a=pop();

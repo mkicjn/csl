@@ -388,6 +388,10 @@ core(TYPE,1) type(obj_t *obj)
 {
 	return type_objs[obj->type];
 }
+core(TYPEP,2) typep(obj_t *obj,obj_t *type)
+{
+	return eq(type_objs[obj->type],type);
+}
 core(OR,2) or(obj_t *a,obj_t *b)
 {
 	return a!=NIL||b!=NIL?T:NIL;
