@@ -10,4 +10,6 @@
   (declare '! (lambda '(n) '(cond ((> n 1) (* n (@ (- n 1)))) (t 1))))
   (declare 'equal (lambda '(l1 l2) '(cond ((and (atom l1) (atom l2)) (eq l1 l2))
 					  ((null (or (atom l1) (atom l2))) (and (@ (car l1) (car l2)) (@ (cdr l1) (cdr l2)))))))
+  (declare 'remove-if (lambda '(f l) '(cond ((null l) nil) ((f (car l)) (@ f (cdr l))) (t (cons (car l) (@ f (cdr l)))))))
+  (declare 'remove-if-not (lambda '(f l) '(cond ((null l) nil) ((f (car l)) (cons (car l) (@ f (cdr l)))) (t (@ f (cdr l))))))
   t)
