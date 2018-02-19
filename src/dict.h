@@ -66,6 +66,8 @@ void s_or();
 extern obj_t or_fun;
 void s_and();
 extern obj_t and_fun;
+void s_file_out();
+extern obj_t file_out_fun;
 #include "arith.h"
 void s_add();
 extern obj_t add_fun;

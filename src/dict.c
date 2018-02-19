@@ -331,6 +331,18 @@ obj_t and_sym=CONSTANT(AND);
 obj_t and_fun=FUNCTION_OBJ(&s_and);
 obj_t and_def=CONS_OBJ(&and_sym,&and_fun);
 obj_t and_dcell=CONS_OBJ(&and_def,&or_dcell);
+void s_file_out()
+{
+	obj_t *a=pop();
+	obj_t *b=pop();
+	push(file_out(b,a));
+	dec_rc(b);
+	dec_rc(a);
+}
+obj_t file_out_sym=CONSTANT(FILE_OUT);
+obj_t file_out_fun=FUNCTION_OBJ(&s_file_out);
+obj_t file_out_def=CONS_OBJ(&file_out_sym,&file_out_fun);
+obj_t file_out_dcell=CONS_OBJ(&file_out_def,&and_dcell);
 void s_add()
 {
 	obj_t *a=pop();
@@ -342,7 +354,7 @@ void s_add()
 obj_t add_sym=CONSTANT(+);
 obj_t add_fun=FUNCTION_OBJ(&s_add);
 obj_t add_def=CONS_OBJ(&add_sym,&add_fun);
-obj_t add_dcell=CONS_OBJ(&add_def,&and_dcell);
+obj_t add_dcell=CONS_OBJ(&add_def,&file_out_dcell);
 void s_sub()
 {
 	obj_t *a=pop();

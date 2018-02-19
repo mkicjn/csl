@@ -19,39 +19,43 @@ core(CONS,2) cons(obj_t *obj1,obj_t *obj2)
 }
 core(PRINT,1) print(obj_t *obj)
 {
-	switch (obj->type) {
-	case CELL:
-		print_cell(obj);
-		break;
-	case SYMBOL:
-		printf("%s",(char *)obj->car);
-		break;
-	case INTEGER:
-		printf("%ld",obj->car);
-		break;
-	case FUNCTION:
-		printf("{FUNCTION 0x%lx}",(long)obj);
-		break;
-	case DOUBLE:
-		printf("%lf",((dobj_t *)obj)->car);
-		break;
-	case ERROR:
-		printf("{ERROR}");
-		break;
-	default:
-		printf("{UNKNOWN TYPE}");
-	}
+	print_obj(obj,stdout);
 	return obj;
 }
-void print_cell(obj_t *obj)
+void print_obj(obj_t *obj,FILE *fh)
+{
+	switch (obj->type) {
+	case CELL:
+		print_cell(obj,fh);
+		break;
+	case SYMBOL:
+		fprintf(fh,"%s",(char *)obj->car);
+		break;
+	case INTEGER:
+		fprintf(fh,"%ld",obj->car);
+		break;
+	case FUNCTION:
+		fprintf(fh,"{FUNCTION 0x%lx}",(long)obj);
+		break;
+	case DOUBLE:
+		fprintf(fh,"%lf",((dobj_t *)obj)->car);
+		break;
+	case ERROR:
+		fprintf(fh,"{ERROR}");
+		break;
+	default:
+		fprintf(fh,"{UNKNOWN TYPE}");
+	}
+}
+void print_cell(obj_t *obj,FILE *fh)
 {
 	putchar('(');
 	obj_t *o=obj;
 	while (o!=NIL) {// TODO: Abstract
 		if (o->type!=CELL) {
-			fputs(". ",stdout);
-			print(o);
-			putchar(')');
+			fputs(". ",fh);
+			print_obj(o,fh);
+			fputc(')',fh);
 			return;
 		}
 		print(car(o));
@@ -371,9 +375,7 @@ core(LOAD,1) load(obj_t *obj)
 		return &ERROR_OBJ;
 	obj_t *o=to_obj(file);
 	free(file);
-	obj_t *e=eval(o);
-	dec_rc(o);
-	return e;
+	return o;
 }
 core(EVAL,1) eval(obj_t *obj)
 {
@@ -399,4 +401,15 @@ core(OR,2) or(obj_t *a,obj_t *b)
 core(AND,2) and(obj_t *a,obj_t *b)
 {
 	return a!=NIL&&b!=NIL?T:NIL;
+}
+core(FILE_OUT,2) file_out(obj_t *file,obj_t *obj)
+{
+	if (file->type!=SYMBOL)
+		return &ERROR_OBJ;
+	FILE *fh=fopen((char *)file->car,"w");
+	if (!fh)
+		return &ERROR_OBJ;
+	print_obj(obj,fh);
+	fclose(fh);
+	return obj;
 }

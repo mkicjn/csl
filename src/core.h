@@ -13,7 +13,8 @@ core(CAR,1) car(obj_t *);
 core(CDR,1) cdr(obj_t *);
 core(CONS,2) cons(obj_t *,obj_t *);
 core(PRINT,1) print(obj_t *);
-void print_cell(obj_t *);
+void print_obj(obj_t *,FILE *fh);
+void print_cell(obj_t *,FILE *fh);
 core(TERPRI,0) terpri();
 core(EQ,2) eq(obj_t *,obj_t *);
 core(SET,2) set(obj_t *,obj_t *);
@@ -46,4 +47,5 @@ core(TYPE,1) type(obj_t *);
 core(TYPEP,2) typep(obj_t *,obj_t *);
 core(OR,2) or(obj_t *,obj_t *);
 core(AND,2) and(obj_t *,obj_t *);
+core(FILE_OUT,2) file_out(obj_t *file,obj_t *obj);
 #endif
