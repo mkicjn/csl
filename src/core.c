@@ -49,7 +49,7 @@ void print_obj(obj_t *obj,FILE *fh)
 }
 void print_cell(obj_t *obj,FILE *fh)
 {
-	putchar('(');
+	fputc('(',fh);
 	obj_t *o=obj;
 	while (o!=NIL) {// TODO: Abstract
 		if (o->type!=CELL) {
@@ -58,12 +58,12 @@ void print_cell(obj_t *obj,FILE *fh)
 			fputc(')',fh);
 			return;
 		}
-		print(car(o));
+		print_obj(car(o),fh);
 		if ((obj_t *)o->cdr!=NIL)
-			putchar(' ');
+			fputc(' ',fh);
 		o=(obj_t *)o->cdr;
 	}
-	putchar(')');
+	fputc(')',fh);
 }
 core(TERPRI,0) terpri()
 {
