@@ -410,6 +410,10 @@ core(AND,2) and(obj_t *a,obj_t *b)
 {
 	return a!=NIL&&b!=NIL?T:NIL;
 }
+core(NOT,2) not(obj_t *obj)
+{
+	return null(obj);
+}
 core(FILE_OUT,2) file_out(obj_t *file,obj_t *obj)
 {
 	if (file->type!=SYMBOL)

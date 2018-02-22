@@ -48,5 +48,6 @@ core(TYPE,1) type(obj_t *);
 core(TYPEP,2) typep(obj_t *,obj_t *);
 core(OR,2) or(obj_t *,obj_t *);
 core(AND,2) and(obj_t *,obj_t *);
+core(NOT,1) not(obj_t *);
 core(FILE_OUT,2) file_out(obj_t *file,obj_t *obj);
 #endif
