@@ -17,19 +17,27 @@ core(CONS,2) cons(obj_t *obj1,obj_t *obj2)
 	inc_rc(obj2);
 	return new_obj(CELL,(long)obj1,(long)obj2);
 }
-core(PRINT,1) print(obj_t *obj)
+core(OUTPUT,1) output(obj_t *obj)
 {
-	print_obj(obj,stdout);
+	print_obj(obj,stdout,true);
 	return obj;
 }
-void print_obj(obj_t *obj,FILE *fh)
+core(PRINT,1) print(obj_t *obj)
+{
+	print_obj(obj,stdout,false);
+	return obj;
+}
+void print_obj(obj_t *obj,FILE *fh,bool q)
 {
 	switch (obj->type) {
 	case CELL:
-		print_cell(obj,fh);
+		print_cell(obj,fh,q);
 		break;
 	case SYMBOL:
-		fprintf(fh,"%s",(char *)obj->car);
+		if (q&&obj->cdr)
+			fprintf(fh,"\"%s\"",(char *)obj->car);
+		else
+			fprintf(fh,"%s",(char *)obj->car);
 		break;
 	case INTEGER:
 		fprintf(fh,"%ld",obj->car);
@@ -47,18 +55,18 @@ void print_obj(obj_t *obj,FILE *fh)
 		fprintf(fh,"{UNKNOWN TYPE}");
 	}
 }
-void print_cell(obj_t *obj,FILE *fh)
+void print_cell(obj_t *obj,FILE *fh,bool q)
 {
 	fputc('(',fh);
 	obj_t *o=obj;
 	while (o!=NIL) {// TODO: Abstract
 		if (o->type!=CELL) {
 			fputs(". ",fh);
-			print_obj(o,fh);
+			print_obj(o,fh,q);
 			fputc(')',fh);
 			return;
 		}
-		print_obj(car(o),fh);
+		print_obj(car(o),fh,q);
 		if ((obj_t *)o->cdr!=NIL)
 			fputc(' ',fh);
 		o=(obj_t *)o->cdr;
@@ -409,7 +417,7 @@ core(FILE_OUT,2) file_out(obj_t *file,obj_t *obj)
 	FILE *fh=fopen((char *)file->car,"w");
 	if (!fh)
 		return &ERROR_OBJ;
-	print_obj(obj,fh);
+	print_obj(obj,fh,true);
 	fclose(fh);
 	return obj;
 }

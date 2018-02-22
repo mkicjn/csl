@@ -120,7 +120,7 @@ obj_t *to_list(char *s)
 			s++;
 			continue;
 		}
-		obj_t *p=qm?new_obj(SYMBOL,(long)tok,0):to_obj(tok);
+		obj_t *p=qm?new_obj(SYMBOL,(long)tok,1):to_obj(tok);
 		push(q?quote(p):p);
 T_L_NEXT_TOK:
 		if (!qm)
@@ -141,7 +141,7 @@ T_L_NEXT_TOK:
 obj_t *to_obj(char *s)
 {
 	obj_t *obj;
-	bool q=*s=='\'',bq=*s=='`';
+	bool q=*s=='\'',bq=*s=='`',qm=s[q]=='"';
 	char *tok=get_token(s);
 	switch (infer_type(tok)) {
 	case CELL:
@@ -164,7 +164,7 @@ obj_t *to_obj(char *s)
 		else if (!strcasecmp(tok,"COND"))
 			obj=COND;
 		else {
-			obj=new_obj(SYMBOL,(long)tok,strlen(tok));
+			obj=new_obj(SYMBOL,(long)tok,qm);
 			return q?quote(obj):obj;
 		}
 		break;

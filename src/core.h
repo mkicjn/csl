@@ -12,9 +12,10 @@
 core(CAR,1) car(obj_t *);
 core(CDR,1) cdr(obj_t *);
 core(CONS,2) cons(obj_t *,obj_t *);
+core(OUTPUT,1) output(obj_t *);
 core(PRINT,1) print(obj_t *);
-void print_obj(obj_t *,FILE *fh);
-void print_cell(obj_t *,FILE *fh);
+void print_obj(obj_t *,FILE *,bool);
+void print_cell(obj_t *,FILE *,bool);
 core(TERPRI,0) terpri();
 core(EQ,2) eq(obj_t *,obj_t *);
 core(SET,2) set(obj_t *,obj_t *);

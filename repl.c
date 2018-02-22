@@ -31,7 +31,7 @@ int main(int argc,char **argv)
 		push(to_obj(input));
 		s_eval();
 		printf("\n=> ");
-		s_print();
+		s_output();
 		terpri();
 		dec_rc(pop());
 	}
