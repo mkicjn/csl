@@ -7,7 +7,12 @@ char *ltrim(char *s)
 bool valid_list(char *s)
 {
 	int p=0;
+	bool q=*s=='"';
 	for (;*s;s++) {
+		if (*s=='"')
+			q=!q;
+		if (q)
+			continue;
 		if (*s=='(')
 			p++;
 		else if (*s==')')
@@ -20,6 +25,8 @@ type_t infer_type(char *s)
 	if (!s)
 		return ERROR;
 	s+=*s=='\''||*s=='`'; // Skip backtick or apostrophe
+	if (*s=='"')
+		return SYMBOL;
 	if (*s=='(')
 		return valid_list(s)?CELL:ERROR;
 	if (*s=='-') {
@@ -44,6 +51,12 @@ type_t infer_type(char *s)
 char *get_word(char *s)
 {
 	register int c=0;
+	if (*s=='"') {
+		for (;s[c+1]&&s[c+1]!='"';c++);
+		if (s[c+1]!='"')
+			return NULL;
+		return memcpy(calloc(c+1,1),s+1,c);
+	}
 	for (;s[c]&&s[c]!=' '&&s[c]!='\t'&&s[c]!='\n'&&s[c]!=')';c++); // Count characters
 	if (!c)
 		return NULL;
@@ -72,6 +85,8 @@ char *get_token(char *s)
 		return NULL;
 	if (*s=='\''||*s=='`')
 		s++;
+	if (*s=='"')
+		return get_word(s);
 	if (*s=='(')
 		return get_list(s);
 	return get_word(s);
@@ -90,7 +105,7 @@ obj_t *to_list(char *s)
 		s++;
 	s++;
 	while (*s&&*(s=ltrim(s))!=')') {
-		bool q=*s=='\'',bq=*s=='`';
+		bool q=*s=='\'',bq=*s=='`',qm=s[q]=='"';
 		char *tok=get_token(s);
 		if (!tok)
 			break;
@@ -105,12 +120,14 @@ obj_t *to_list(char *s)
 			s++;
 			continue;
 		}
-		push(q?quote(to_obj(tok)):to_obj(tok));
+		obj_t *p=qm?new_obj(SYMBOL,(long)tok,0):to_obj(tok);
+		push(q?quote(p):p);
 T_L_NEXT_TOK:
-		free(tok);
+		if (!qm)
+			free(tok);
 		if (dot)
 			break;
-		s+=len+q+bq;
+		s+=len+q+bq+qm+qm;
 	}
 	if (!dot)
 		push(NIL);
