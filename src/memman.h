@@ -1,7 +1,10 @@
 #ifndef MEMMAN_H
 #define MEMMAN_H
+#include <stdio.h>
 #include <stdlib.h>
 #include "types.h"
+#include "core.h"
+#include "debug.h"
 #define new(x) malloc(sizeof(x));
 obj_t *new_obj(type_t,long,long);
 obj_t *new_dobj(double);

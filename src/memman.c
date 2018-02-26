@@ -6,6 +6,7 @@ obj_t *new_obj(type_t type,long car,long cdr)
 	obj->car=car;
 	obj->cdr=cdr;
 	obj->refs=0;
+	DEBUG(fprintf(stderr,"New object: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
 	return obj;
 }
 obj_t *new_dobj(double car)
@@ -16,10 +17,12 @@ obj_t *new_dobj(double car)
 	((dobj_t *)obj)->car=car;
 	obj->cdr=0;
 	obj->refs=0;
+	DEBUG(fprintf(stderr,"New object: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
 	return (obj_t *)obj;
 }
 void destroy(obj_t *obj)
 {
+	DEBUG(fprintf(stderr,"Destroying: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
 	switch (obj->type) {
 		case FUNCTION:
 			destroy_func(obj);
