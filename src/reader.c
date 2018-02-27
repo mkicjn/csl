@@ -2,6 +2,10 @@
 char *ltrim(char *s)
 {
 	for (;*s==' '||*s=='\n'||*s=='\t';s++);
+	if (*s=='~') {
+		for (;*s!='~';s++);
+		return ltrim(s+1);
+	}
 	return s;
 }
 bool valid_list(char *s)
