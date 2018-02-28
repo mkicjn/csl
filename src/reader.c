@@ -3,6 +3,7 @@ char *ltrim(char *s)
 {
 	for (;*s==' '||*s=='\n'||*s=='\t';s++);
 	if (*s=='~') {
+		s++;
 		for (;*s!='~';s++);
 		return ltrim(s+1);
 	}
