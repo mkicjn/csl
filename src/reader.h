@@ -9,6 +9,7 @@
 #include "memman.h"
 #include "stack.h"
 #include "types.h"
+#include "debug.h"
 char *ltrim(char *);
 bool valid_list(char *);
 type_t infer_type(char *);

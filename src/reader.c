@@ -17,9 +17,9 @@ bool valid_list(char *s)
 			q=!q;
 		if (q)
 			continue;
-		if (*s=='(')
+		if (*s=='('||*s=='{')
 			p++;
-		else if (*s==')')
+		else if (*s==')'||*s=='}')
 			p--;
 	}
 	return p==0;
@@ -31,7 +31,7 @@ type_t infer_type(char *s)
 	s+=*s=='\''||*s=='`'; // Skip backtick or apostrophe
 	if (*s=='"')
 		return SYMBOL;
-	if (*s=='(')
+	if (*s=='('||*s=='{')
 		return valid_list(s)?CELL:ERROR;
 	if (*s=='-') {
 		s++;
@@ -70,9 +70,9 @@ char *get_list(char *s)
 {
 	register int c=0,p=0;
 	for (;s[c];c++) { // Count parentheses
-		if (s[c]=='(')
+		if (s[c]=='('||s[c]=='{')
 			p++;
-		else if (s[c]==')') {
+		else if (s[c]==')'||s[c]=='}') {
 			p--;
 			if (!p) // Exit when balanced
 				goto GET_LIST_RET;
@@ -91,7 +91,7 @@ char *get_token(char *s)
 		s++;
 	if (*s=='"')
 		return get_word(s);
-	if (*s=='(')
+	if (*s=='('||*s=='{')
 		return get_list(s);
 	return get_word(s);
 }
@@ -105,11 +105,14 @@ obj_t *to_list(char *s)
 {
 	push(NULL); // Marker for front of list
 	bool dot=false;
+	bool qarg=*s=='{';
 	if (*s=='\'')
 		s++;
 	s++;
-	while (*s&&*(s=ltrim(s))!=')') {
-		bool q=*s=='\'',bq=*s=='`',qm=s[q]=='"';
+	int c=0;
+	while (*s&&*(s=ltrim(s))!=')'&&*s!='}') {
+		bool q=*s=='\''||(qarg&&c>0);
+		bool bq=*s=='`',qm=s[q]=='"';
 		char *tok=get_token(s);
 		if (!tok)
 			break;
@@ -132,6 +135,7 @@ T_L_NEXT_TOK:
 		if (dot)
 			break;
 		s+=len+q+bq+qm+qm;
+		c++;
 	}
 	if (!dot)
 		push(NIL);
@@ -142,6 +146,7 @@ T_L_NEXT_TOK:
 	list->refs--;
 	return list;
 }
+#define DEBUG DEBUG_ON
 obj_t *to_obj(char *s)
 {
 	obj_t *obj;
@@ -182,8 +187,11 @@ obj_t *to_obj(char *s)
 		obj=&ERROR_OBJ;
 	}
 	free(tok);
-	return q?quote(obj):obj;
+	obj=q?quote(obj):obj;
+	DEBUG(fprintf(stderr,"Read: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
+	return obj;
 }
+#define DEBUG DEBUG_OFF
 obj_t *to_splice(char *str)
 {	// Expects list string after parenthesis
 	str=ltrim(str);
