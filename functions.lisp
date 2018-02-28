@@ -1,6 +1,6 @@
 (progn
-  (define 'reducel (lambda '(f a l) '(cond (l (@ f (f a (car l)) (cdr l))) (t a))))
-  (declare 'reduce (lambda '(f l) '(reducel f (f (car l) (car (cdr l))) (cdr (cdr l)))))
+  (define 'reducea (lambda '(f a l) '(cond (l (@ f (f a (car l)) (cdr l))) (t a))))
+  (declare 'reduce (lambda '(f l) '(reducea f (f (car l) (car (cdr l))) (cdr (cdr l)))))
   (declare 'mapcar (lambda '(f l) '(cond (l (cons (f (car l)) (@ f (cdr l)))))))
   (declare 'desc (lambda '(o l) '(cond ((null o) l) ((eq (car o) 'a) (@ (cdr o) (car l))) ((eq (car o) 'd) (@ (cdr o) (cdr l))))))
   (declare 'nth (lambda '(n l) '(cond ((null l) nil) ((eq n 0) (car l)) (t (@ (- n 1) (cdr l))))))
@@ -14,4 +14,12 @@
   (declare 'remove-if-not (lambda '(f l) '(cond ((null l) nil) ((f (car l)) (cons (car l) (@ f (cdr l)))) (t (@ f (cdr l))))))
   (define 'letl (lambda '(p) '(cond (p (cons `(define :(car (car p)) :(car (cdr (car p)))) (@ (cdr p)))))))
   (declare 'let (lambda '(p) (quote `(progn \(letl p)))))
+
+  (declare 'nl '"
+")
+  (declare 'sp '" ")
+  (declare 'colon ':)
+  (declare 'backslash '\)
+	     (declare 'format (lambda '(f) '(cond (f (progn (print (car f)) (@ (cdr f)))))))
+	       (declare 'space (lambda '(l) '(cond ((cdr l) `(:(car l) :sp \(@ (cdr l)))) (t (list (car l))))))
   t)
