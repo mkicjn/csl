@@ -61,7 +61,7 @@ char *get_word(char *s)
 			return NULL;
 		return memcpy(calloc(c+1,1),s+1,c);
 	}
-	for (;s[c]&&s[c]!=' '&&s[c]!='\t'&&s[c]!='\n'&&s[c]!=')';c++); // Count characters
+	for (;s[c]&&s[c]!=' '&&s[c]!='\t'&&s[c]!='\n'&&s[c]!=')'&&s[c]!='}';c++); // Count characters
 	if (!c)
 		return NULL;
 	return memcpy(calloc(c+1,1),s,c);
@@ -105,13 +105,13 @@ obj_t *to_list(char *s)
 {
 	push(NULL); // Marker for front of list
 	bool dot=false;
-	bool qarg=*s=='{';
+	bool m=*s=='{';
 	if (*s=='\'')
 		s++;
 	s++;
 	int c=0;
 	while (*s&&*(s=ltrim(s))!=')'&&*s!='}') {
-		bool q=*s=='\''||(qarg&&c>0);
+		bool q=*s=='\''||(m&&c>0);
 		bool bq=*s=='`',qm=s[q]=='"';
 		char *tok=get_token(s);
 		if (!tok)
@@ -144,9 +144,10 @@ T_L_NEXT_TOK:
 	obj_t *list=pop();
 	pop(); // Get rid of NULL on stack
 	list->refs--;
+	if (m) // If it is a "macro evaluation"
+		list=cons(&eval_fun,cons(list,NIL)); // (cons eval (cons list nil))
 	return list;
 }
-#define DEBUG DEBUG_ON
 obj_t *to_obj(char *s)
 {
 	obj_t *obj;
@@ -187,11 +188,11 @@ obj_t *to_obj(char *s)
 		obj=&ERROR_OBJ;
 	}
 	free(tok);
-	obj=q?quote(obj):obj;
+	if (q)
+		obj=quote(obj);
 	DEBUG(fprintf(stderr,"Read: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
 	return obj;
 }
-#define DEBUG DEBUG_OFF
 obj_t *to_splice(char *str)
 {	// Expects list string after parenthesis
 	str=ltrim(str);
@@ -215,7 +216,8 @@ obj_t *to_splice(char *str)
 	if (q)
 		o=quote(o);
 	free(tok);
-	o=u||s?o:quote(o);
+	if (!u&&!s)
+		o=quote(o);
 	// (f o (@ (+ str len 1))))
 	return cons(f,cons(o,cons(to_splice(str+len),NIL)));
 }
