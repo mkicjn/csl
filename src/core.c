@@ -239,7 +239,7 @@ core(EXIT,0) l_exit()
 {
 	while (stackitem(0))
 		dec_rc(pop());
-	dec_rc(ENV);
+	//dec_rc(ENV);
 	dec_rc(DICT);
 	exit(0);
 }
@@ -306,7 +306,7 @@ void bind_args(obj_t *argn)
 	}
 	ndrop(argc);
 }
-core(FUNCALL,1) funcall(obj_t *func)
+obj_t *funcall(obj_t *func)
 {
 	static obj_t *last_call=NULL;
 	if (func->type!=FUNCTION)
