@@ -21,6 +21,7 @@
   (declare 'let (lambda '(p) (quote `(progn \(letl p)))))
   (declare 'defun (lambda '(s a b) (quote `(declare :`(quote :s) :`(lambda :`(quote :a) :`(quote :b))))))
   (declare 'apply (lambda '(f a) (quote `(:f \a))))
+  (declare 'funcall (lambda variadic '(eval (apply (car argv) (cdr argv)))))
 
 	~ Formatted output ~
   (declare 'nl '"
