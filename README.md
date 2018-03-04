@@ -45,9 +45,6 @@ With no arguments, the executable enters a REPL. First argument to the executabl
   * They are outputted with what is in effect `output`, so symbols made with quotation marks can be read back in.
 * Bad argument types to functions generally return `ERROR`, e.g. `(+ 1 'a)` => `ERROR`
   * There may be some places where a segfault is caused instead of returning `ERROR`. This is an oversight.
-* `funcall` exists to the language, but is completely redundant as everything inside a form is evaluated already, including the function to be applied.
-  * I actually don't even know if it works as intended because I never use it, because of its uselessness in my dialect.
-  * It is very likely that I will make it unavailable, because again, it is completely unnecessary.
 * The special forms `cond` and `progn` work with special translation rules.
 * The `see` function "disassembles" a given function argument, returning the result of turning its "compiled" "bytecode" into a regular old linked list, like every other object.
 * `funcall` does not exist to the language; it is completely redundant as everything inside a form is evaluated already, including the function to be applied.
