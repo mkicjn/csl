@@ -216,14 +216,14 @@ core(DECLARE,2) declare(obj_t *sym,obj_t *def)
 }
 core(DEFINE,2) define(obj_t *sym,obj_t *def)
 {
-	if (sym->refs<0&&sym!=SELF)
+	if (sym->refs<0&&sym!=SELF&&sym!=ARGV)
 		return &ERROR_OBJ;
 	ENV=cons(cons(sym,def),ENV);
 	return sym;
 }
 core(SYMVAL,1) symval(obj_t *obj)
 {
-	if (obj->refs<0&&obj!=SELF)
+	if (obj->refs<0&&obj!=SELF&&obj!=ARGV)
 		return obj;
 	if (obj->type!=SYMBOL)
 		return obj;
@@ -249,7 +249,7 @@ core(LIST,0) list()
 	while(stackitem(1)!=&ARGS)
 		s_cons();
 	register obj_t *r=pop();
-	r->refs--;
+	r->refs-=r->refs>0;
 	return r;
 }
 long length(obj_t *list)
@@ -297,6 +297,10 @@ core(SEE,1) see(obj_t *func)
 }
 void bind_args(obj_t *argn)
 {	// Bind symbols in list to items on stack
+	if (argn==VARIADIC) {
+		define(ARGV,list());
+		return;
+	}
 	obj_t *l=argn;
 	long argc=length(argn);
 	for (long i=0;i<argc;i++) {

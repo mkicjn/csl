@@ -10,6 +10,11 @@
 #include "stack.h"
 #include "types.h"
 #include "debug.h"
+#define TRY \
+if (false);
+#define CATCH_CONST(x) \
+else if (!strcasecmp(tok,#x)) \
+	obj=x;
 char *ltrim(char *);
 bool valid_list(char *);
 type_t infer_type(char *);

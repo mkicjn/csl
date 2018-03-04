@@ -162,18 +162,16 @@ obj_t *to_obj(char *s)
 			obj=to_list(tok);
 		break;
 	case SYMBOL:
-		if (!strcasecmp(tok,"NIL"))
-			obj=NIL;
-		else if (!strcasecmp(tok,"T"))
-			obj=T;
-		else if (!strcasecmp(tok,"@"))
+		TRY // lets "else if" statements follow
+		CATCH_CONST(NIL)
+		CATCH_CONST(T)
+		CATCH_CONST(QUOTE)
+		CATCH_CONST(PROGN)
+		CATCH_CONST(COND)
+		CATCH_CONST(VARIADIC)
+		// Don't catch ARGV
+		else if (tok[0]=='@'&&!tok[1]) // CATCH_CONST(@)
 			obj=SELF;
-		else if (!strcasecmp(tok,"QUOTE"))
-			obj=QUOTE;
-		else if (!strcasecmp(tok,"PROGN"))
-			obj=PROGN;
-		else if (!strcasecmp(tok,"COND"))
-			obj=COND;
 		else {
 			obj=new_obj(SYMBOL,(long)tok,qm);
 			return q?quote(obj):obj;

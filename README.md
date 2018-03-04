@@ -48,9 +48,10 @@ With no arguments, the executable enters a REPL. First argument to the executabl
 * `funcall` exists to the language, but is completely redundant as everything inside a form is evaluated already, including the function to be applied.
   * I actually don't even know if it works as intended because I never use it, because of its uselessness in my dialect.
   * It is very likely that I will make it unavailable, because again, it is completely unnecessary.
-* Variadic functions do not and can not exist until the Forth-like embedded syntax becomes a reality.
-  * The special forms `cond` and `progn` work with special translation rules.
+* The special forms `cond` and `progn` work with special translation rules.
   * The `see` function "disassembles" a given function argument, returning the result of turning its "compiled" "bytecode" into a regular old linked list, like every other object.
+* Variadic functions now exist. Use the symbol `VARIADIC` (case-insensitive) in place of arguments. This binds arguments to the symbol `ARGV`.
+  * e.g. `(declare 'sum (lambda variadic '(reduce + argv)))`
 
 ##### "Fun" facts:
 * This project was originally written in x64 assembly but was not garbage collected. In fact, it was my second real project in assembly, and was the proving ground for teaching myself assembly.
