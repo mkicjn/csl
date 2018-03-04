@@ -39,7 +39,6 @@ core(LENGTH,1) l_length(obj_t *);
 core(LAMBDA,2) lambda(obj_t *,obj_t *);
 core(SEE,1) see(obj_t *);
 void bind_args(obj_t *);
-void bind_varargs();
 obj_t *funcall(obj_t *);
 void do_body(obj_t **,long);
 char *slurp(char *);
