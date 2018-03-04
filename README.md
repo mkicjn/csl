@@ -1,5 +1,7 @@
 # csl
-A garbage-collected rewrite of stacklisp in C
+An amateur LISP dialect with a stack-based bytecode compiler/interpreter based on translation to RPN
+
+(i.e. a garbage-collected redo of stacklisp in C instead of x64 assembly, but with way more features)
 
 ##### To-do list:
 * Manage environments better to make temporary bindings more sensible
