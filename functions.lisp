@@ -13,10 +13,14 @@
 					  ((not (or (atom l1) (atom l2))) (and (@ (car l1) (car l2)) (@ (cdr l1) (cdr l2)))))))
   (declare 'remove-if (lambda '(f l) '(cond ((null l) nil) ((f (car l)) (@ f (cdr l))) (t (cons (car l) (@ f (cdr l)))))))
   (declare 'remove-if-not (lambda '(f l) '(cond ((null l) nil) ((f (car l)) (cons (car l) (@ f (cdr l)))) (t (@ f (cdr l))))))
+  (declare 'sumlist (lambda '(l) '(reduce + l)))
+  (declare 'sum (lambda variadic '(reduce + argv)))
 
   	~ Macros ~
   (define 'letl (lambda '(p) '(cond (p (cons `(define :(car (car p)) :(car (cdr (car p)))) (@ (cdr p)))))))
   (declare 'let (lambda '(p) (quote `(progn \(letl p)))))
+  (declare 'defun (lambda '(s a b) (quote `(declare :`(quote :s) :`(lambda :`(quote :a) :`(quote :b))))))
+  (declare 'apply (lambda '(f a) (quote `(:f \a))))
 
 	~ Formatted output ~
   (declare 'nl '"
