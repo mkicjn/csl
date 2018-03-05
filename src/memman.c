@@ -23,43 +23,44 @@ obj_t *new_dobj(double car)
 void destroy(obj_t *obj)
 {
 	DEBUG(fprintf(stderr,"Destroying: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
-	switch (obj->type) {
+	type_t t=obj->type;
+	switch (t) {
 		case FUNCTION:
-			destroy_func(obj);
+			destroy_body(obj);
 			break;
 		case SYMBOL:
 			free((char *)obj->car);
 		case DOUBLE:
 		case INTEGER:
-			free(obj);
 			break;
 		case CELL:
 			dec_rc((obj_t *)obj->car);
 			dec_rc((obj_t *)obj->cdr);
-			free(obj);
-		default:
 			break;
+		default:
+			return;
 	}
+	obj->type=ERROR;
+	free(obj);
 }
-void destroy_func(obj_t *obj)
+void destroy_body(obj_t *obj)
 {
 	long size=obj->cdr;
 	obj_t **f=(obj_t **)obj->car;
 	for (int i=0;i<size;i++)
 		dec_rc(f[i]);
 	free(f);
-	free(obj);
 }
 void inc_rc(obj_t *obj)
 {
-	if (!obj)
+	if (!obj||obj->type==ERROR)
 		return;
 	DEBUG(fprintf(stderr,"refs++: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
 	obj->refs+=obj->refs>=0;
 }
 void dec_rc(obj_t *obj)
 {
-	if (!obj)
+	if (!obj||obj->type==ERROR)
 		return;
 	DEBUG(fprintf(stderr,"refs--: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
 	obj->refs-=obj->refs>0;
