@@ -7,4 +7,4 @@ csl: repl.c src/*
 	$(CC) -o csl repl.c src/*.c $(CFLAGS)
 
 clean:
-	rm csl lisp.h src/dict.h
+	rm csl lisp.h src/dict.*

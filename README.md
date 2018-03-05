@@ -63,6 +63,6 @@ With no arguments, the executable enters a REPL. First argument to the executabl
   * The original idea for the project came when I figured that since both prefix notation and reverse Polish notation has no ambiguity (with order of operations), it should be possible to translate one into the other. I like LISP and Forth, so it was not a large leap in logic that I should try to build something like this.
 * I wrote a minimal LISP interpreter in C a long time ago (also on Github), but it was very buggy and had deep fundamental design flaws. In my opinion, this project is already *almost* as usable as a real compiler/interpreter, and will be when I finish fixing the odd automatic memory management flaws (the occasional invalid free() or slight memory leak).
 * `(eval f)` is functionally identical to `((lambda nil f))`.
-* On my PC, loading functions.lisp and running `(reduce * (range 1.0 1.0 100.0))` (i.e. 100!) takes 2 milliseconds.
+* On my laptop, calculating 100 factorial takes 3 milliseconds.
 
 Examples available in functions.lisp

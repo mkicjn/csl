@@ -312,7 +312,6 @@ void bind_args(obj_t *argn)
 }
 obj_t *funcall(obj_t *func)
 {
-	static obj_t *last_call=NULL;
 	if (func->type!=FUNCTION)
 		return &ERROR_OBJ;
 	if (func->refs<0) {
@@ -323,9 +322,6 @@ obj_t *funcall(obj_t *func)
 	obj_t **f=(obj_t **)func->car;
 	obj_t *old_env=ENV;
 	ENV=f[0];
-	if (func!=last_call)
-		inc_rc(f[0]);
-	last_call=func;
 	bind_args(f[1]);
 	define(SELF,func);
 	do_body(f,func->cdr);
