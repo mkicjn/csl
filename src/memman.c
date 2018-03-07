@@ -22,10 +22,21 @@ obj_t *new_dobj(double car)
 }
 void destroy(obj_t *obj)
 {
-	DEBUG(fprintf(stderr,"Destroying: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
+	DEBUG(
+		fprintf(stderr,"Destroying 0x%lx: ",(unsigned long)obj);
+		print_obj(obj,stderr,true);
+		fputc('\n',stderr);
+	)
 	type_t t=obj->type;
 	switch (t) {
 		case FUNCTION:
+			DEBUG(
+				fprintf(stderr,"SEE-> ");
+				obj_t *s=see(obj);
+				print_obj(s,stderr,true);
+				fputc('\n',stderr);
+				destroy(s);
+			)
 			destroy_body(obj);
 			break;
 		case SYMBOL:

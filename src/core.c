@@ -387,6 +387,7 @@ core(LOAD,1) load(obj_t *obj)
 }
 core(EVAL,1) eval(obj_t *obj)
 {
+	DEBUG(fprintf(stderr,"EVAL: "); print_obj(obj,stderr,true); fputc('\n',stderr);)
 	obj_t *f=lambda(NIL,obj);
 	do_body((obj_t **)f->car,f->cdr);
 	dec_rc(f);

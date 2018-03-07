@@ -9,6 +9,7 @@
 #include "rpn.h"
 #include "stack.h"
 #include "types.h"
+#include "debug.h"
 core(CAR,1) car(obj_t *);
 core(CDR,1) cdr(obj_t *);
 core(CONS,2) cons(obj_t *,obj_t *);
