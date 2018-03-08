@@ -107,6 +107,8 @@ core(SET,2) set(obj_t *obj1,obj_t *obj2)
 		dec_rc((obj_t *)obj1->cdr);
 		break;
 	case FUNCTION:
+		destroy_body(obj1);
+		break;
 	case SYMBOL:
 		free((void *)obj1->car);
 	default:
@@ -119,9 +121,11 @@ core(SET,2) set(obj_t *obj1,obj_t *obj2)
 		strcpy((char *)obj1->car,(char *)obj2->car);
 		break;
 	case FUNCTION:
-		obj1->car=(long)malloc(obj2->cdr);
-		obj1->cdr=obj2->cdr;
-		memcpy((void *)obj1->car,(void *)obj2->car,obj2->cdr);
+		obj1->car=(long)malloc(obj2->cdr); // Allocate body
+		obj1->cdr=obj2->cdr; // Copy size
+		memcpy((void *)obj1->car,(void *)obj2->car,obj2->cdr); // Copy pointers
+		for (long i=0;i<obj2->cdr;i++) // Increase reference counters
+			inc_rc(((obj_t **)obj1->car)[i]);
 		break;
 	case CELL:
 		inc_rc((obj_t *)obj2->car);
