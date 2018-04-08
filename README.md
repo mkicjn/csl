@@ -56,7 +56,7 @@ With no arguments, the executable enters a REPL. First argument to the executabl
 * Variadic functions are possible. Use the symbol `VARIADIC` (case-insensitive) in place of arguments. This binds arguments to the symbol `ARGV`.
   * e.g. `(declare 'sum (lambda variadic '(reduce + argv)))`
 * The arithmetic operators are not variadic, but can easily be redefined to be variadic
-  * e.g. `(progn (declare 'sum (lambda '(l) `(cond (l (:+ (car l) (recurse (cdr l)))) (t 0)))) (declare '+ (lambda variadic '(sum argv))))`
+  * e.g. ``(progn (declare 'sum (lambda '(l) `(cond (l (:+ (car l) (recurse (cdr l)))) (t 0)))) (declare '+ (lambda variadic '(sum argv))))``
 
 ##### "Fun" facts:
 * This project was originally written in x64 assembly but was not garbage collected. In fact, it was my second real project in assembly, and was the proving ground for teaching myself assembly.
