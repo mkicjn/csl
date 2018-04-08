@@ -195,7 +195,6 @@ obj_t *to_obj(char *s)
 obj_t *to_splice(char *str)
 {	// Expects list string after parenthesis
 	str=ltrim(str);
-	fprintf(stderr,"to_splice(\"%s\")\n",str);
 	bool u=*str==':';
 	str+=u;
 	bool s=*str=='\\';
