@@ -430,3 +430,12 @@ core(FILE_OUT,2) file_out(obj_t *file,obj_t *obj)
 	fclose(fh);
 	return obj;
 }
+core(NTHCDR,2) nthcdr(obj_t *num,obj_t *list)
+{
+	if (num->type!=INTEGER||list->type!=CELL)
+		return &ERROR_OBJ;
+	long n=num->car;
+	for (long i=0;i<n;i++)
+		list=cdr(list);
+	return list;
+}

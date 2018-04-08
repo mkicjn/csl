@@ -4,7 +4,6 @@
   (declare 'reduce (lambda '(f l) '(reducea f (f (car l) (car (cdr l))) (cdr (cdr l)))))
   (declare 'mapcar (lambda '(f l) '(cond (l (cons (f (car l)) (@ f (cdr l)))))))
   (declare 'desc (lambda '(o l) '(cond ((null o) l) ((eq (car o) 'a) (@ (cdr o) (car l))) ((eq (car o) 'd) (@ (cdr o) (cdr l))))))
-  (declare 'nthcdr (lambda '(n l) '(cond ((null l) l) ((> n 0) (@ (- n 1) (cdr l))) (t l))))
   (declare 'nth (lambda '(n l) '(car (nthcdr n l))))
   (declare 'randelt (lambda '(l) '(nth (random (length l)) l)))
   (declare 'range (lambda '(stt stp end) '(cond ((not ((cond ((> stp 0) >) ((< stp 0) <)) stt end)) (cons stt (@ (+ stt stp) stp end))))))
