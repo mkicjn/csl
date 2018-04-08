@@ -98,7 +98,7 @@ char *get_token(char *s)
 }
 obj_t *quote(obj_t *obj)
 {
-	if (obj==NIL||obj==T||obj==SELF)
+	if (obj==NIL||obj==T||obj==RECURSE)
 		return obj;
 	return cons(QUOTE,cons(obj,NIL));
 }
@@ -171,7 +171,7 @@ obj_t *to_obj(char *s)
 		CATCH_CONST(VARIADIC)
 		// Don't catch ARGV
 		else if (tok[0]=='@'&&!tok[1]) // CATCH_CONST(@)
-			obj=SELF;
+			obj=RECURSE;
 		else {
 			obj=new_obj(SYMBOL,(long)tok,qm);
 			return q?quote(obj):obj;
@@ -195,6 +195,7 @@ obj_t *to_obj(char *s)
 obj_t *to_splice(char *str)
 {	// Expects list string after parenthesis
 	str=ltrim(str);
+	fprintf(stderr,"to_splice(\"%s\")\n",str);
 	bool u=*str==':';
 	str+=u;
 	bool s=*str=='\\';
@@ -208,7 +209,10 @@ obj_t *to_splice(char *str)
 		return NIL;
 	int len=strlen(tok);
 	obj_t *f=s?&append_fun:&cons_fun,*o;
-	if (bq)
+	if (infer_type(tok)==CELL&&!bq) {
+		o=to_splice(tok+1);
+		u=true;
+	} else if (bq)
 		o=to_splice(tok+1);
 	else
 		o=to_obj(tok);

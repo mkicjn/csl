@@ -15,7 +15,7 @@ obj_t *x=&x##_OBJ;
 extern obj_t NIL_OBJ;
 extern obj_t *NIL;
 extern obj_t *T;
-extern obj_t *SELF;
+extern obj_t *RECURSE;
 extern obj_t *QUOTE;
 extern obj_t *PROGN;
 extern obj_t *COND;

@@ -220,14 +220,14 @@ core(DECLARE,2) declare(obj_t *sym,obj_t *def)
 }
 core(DEFINE,2) define(obj_t *sym,obj_t *def)
 {
-	if (sym->refs<0&&sym!=SELF&&sym!=ARGV)
+	if (sym->refs<0&&sym!=RECURSE&&sym!=ARGV)
 		return &ERROR_OBJ;
 	ENV=cons(cons(sym,def),ENV);
 	return sym;
 }
 core(SYMVAL,1) symval(obj_t *obj)
 {
-	if (obj->refs<0&&obj!=SELF&&obj!=ARGV)
+	if (obj->refs<0&&obj!=RECURSE&&obj!=ARGV)
 		return obj;
 	if (obj->type!=SYMBOL)
 		return obj;
@@ -327,7 +327,7 @@ obj_t *funcall(obj_t *func)
 	obj_t *old_env=ENV;
 	ENV=f[0];
 	bind_args(f[1]);
-	define(SELF,func);
+	define(RECURSE,func);
 	do_body(f,func->cdr);
 	dec_rc(ENV);
 	ENV=old_env;
