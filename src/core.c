@@ -445,3 +445,13 @@ core(SYSTEM,1) l_system(obj_t *o)
 		return &ERROR_OBJ;
 	return new_obj(INTEGER,system((char *)o->car),0);
 }
+core(SYMCONC,2) symconc(obj_t *sym1,obj_t *sym2)
+{
+	if (sym1->type!=SYMBOL||sym2->type!=SYMBOL)
+		return &ERROR_OBJ;
+	char *str1=(char *)sym1->car,*str2=(char *)sym2->car;
+	char *s=calloc(strlen(str1)+strlen(str2)+1,1);
+	strcat(s,str1);
+	strcat(s,str2);
+	return new_obj(SYMBOL,(long)s,sym1->cdr||sym2->cdr);
+}
