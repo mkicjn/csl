@@ -439,3 +439,9 @@ core(NTHCDR,2) nthcdr(obj_t *num,obj_t *list)
 		list=cdr(list);
 	return list;
 }
+core(SYSTEM,1) l_system(obj_t *o)
+{
+	if (o->type!=SYMBOL)
+		return &ERROR_OBJ;
+	return new_obj(INTEGER,system((char *)o->car),0);
+}

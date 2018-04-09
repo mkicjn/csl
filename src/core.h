@@ -52,4 +52,5 @@ core(AND,2) and(obj_t *,obj_t *);
 core(NOT,1) not(obj_t *);
 core(FILE_OUT,2) file_out(obj_t *,obj_t *);
 core(NTHCDR,2) nthcdr(obj_t *,obj_t *);
+core(SYSTEM,1) l_system(obj_t *);
 #endif
