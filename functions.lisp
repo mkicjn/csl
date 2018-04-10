@@ -1,7 +1,6 @@
 (progn
   	~ General functions ~
-  (define 'reducea (lambda '(f a l) '(cond (l (@ f (f a (car l)) (cdr l))) (t a))))
-  (declare 'reduce (lambda '(f l) '(reducea f (f (car l) (car (cdr l))) (cdr (cdr l)))))
+  (declare 'reduce (lambda '(f l) `(:(lambda '(f a l) '(cond (l (@ f (f a (car l)) (cdr l))) (t a))) f (f (car l) (car (cdr l))) (cdr (cdr l)))))
   (declare 'mapcar (lambda '(f l) '(cond (l (cons (f (car l)) (@ f (cdr l)))))))
   (declare 'desc (lambda '(o l) '(cond ((null o) l) ((eq (car o) 'a) (@ (cdr o) (car l))) ((eq (car o) 'd) (@ (cdr o) (cdr l))))))
   (declare 'nth (lambda '(n l) '(car (nthcdr n l))))

@@ -98,7 +98,7 @@ char *get_token(char *s)
 }
 obj_t *quote(obj_t *obj)
 {
-	if (obj==NIL||obj==T||obj==RECURSE)
+	if (obj==NIL||obj==T)
 		return obj;
 	return cons(QUOTE,cons(obj,NIL));
 }
@@ -172,10 +172,9 @@ obj_t *to_obj(char *s)
 		// Don't catch ARGV
 		else if (tok[0]=='@'&&!tok[1]) // CATCH_CONST(@)
 			obj=RECURSE;
-		else {
+		else
 			obj=new_obj(SYMBOL,(long)tok,qm);
-			return q?quote(obj):obj;
-		}
+		return q?quote(obj):obj;
 		break;
 	case INTEGER:
 		obj=new_obj(INTEGER,atol(tok),0);
@@ -208,7 +207,7 @@ obj_t *to_splice(char *str)
 		return NIL;
 	int len=strlen(tok);
 	obj_t *f=s?&append_fun:&cons_fun,*o;
-	if (infer_type(tok)==CELL&&!bq) {
+	if (infer_type(tok)==CELL&&!u) {
 		o=to_splice(tok+1);
 		u=true;
 	} else if (bq)
