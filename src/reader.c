@@ -2,12 +2,18 @@
 char *ltrim(char *s)
 {
 	for (;*s==' '||*s=='\n'||*s=='\t';s++);
-	if (*s=='~') {
+	switch (*s) {
+	case '~':
 		s++;
 		for (;*s!='~';s++);
 		return ltrim(s+1);
+	case '#':
+		s++;
+		for (;*s!='\n';s++);
+		return ltrim(s+1);
+	default:
+		return s;
 	}
-	return s;
 }
 bool valid_list(char *s)
 {
