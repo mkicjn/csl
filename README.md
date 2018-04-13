@@ -20,6 +20,8 @@ Build with `make`.
 
 With no arguments, the executable enters a REPL. First argument to the executable is loaded and evaluated like a script (its return value not printed).
 
+Scripts can also start with a shebang (i.e. `#!/usr/local/bin/csl`) and be marked as executable to be run like any script written in Perl, Bash, etc.
+
 ##### Specific points:
 * This "compiler" works by translating LISP code to reverse Polish notation, and "compiling" it into a "threaded" "bytecode" (a series of addresses) for the "bytecode" interpreter.
   * I don't know whether my usage of this terminology is legitimate because I haven't taken CS in college yet.
@@ -36,7 +38,8 @@ With no arguments, the executable enters a REPL. First argument to the executabl
   * `print` works as Common Lisp's `princ`
   * `output` works as Common Lisp's `prin1`
 * Symbols are case sensitive
-* Comments go between tildes, e.g. `~...~`
+* Line comments go after a pound sign, i.e. `# ...`
+* Block comments go between tildes, e.g. `~...~`
 * For conditionals, `cond` exists, but not `if` (although you could easily implement it in the language as a macro)
   * I might add `if` in the future
 * There are two functions for declaring variables:
