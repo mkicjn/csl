@@ -52,10 +52,11 @@ core(TYPEP,2) typep(obj_t *,obj_t *);
 core(OR,2) or(obj_t *,obj_t *);
 core(AND,2) and(obj_t *,obj_t *);
 core(NOT,1) not(obj_t *);
-core(FILE_OUT,2) file_out(obj_t *,obj_t *);
+core(FILE-OUT,2) file_out(obj_t *,obj_t *);
 core(NTHCDR,2) nthcdr(obj_t *,obj_t *);
 core(SYSTEM,1) l_system(obj_t *);
 core(SYMCONC,2) symconc(obj_t *,obj_t *);
 core(KEY,0) key();
 core(SLEEP,1) l_sleep(obj_t *);
+core(READ-LINE,1) readline(obj_t *);
 #endif

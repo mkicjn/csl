@@ -419,7 +419,7 @@ core(NOT,2) not(obj_t *obj)
 {
 	return null(obj);
 }
-core(FILE_OUT,2) file_out(obj_t *file,obj_t *obj)
+core(FILE-OUT,2) file_out(obj_t *file,obj_t *obj)
 {
 	if (file->type!=SYMBOL)
 		return &ERROR_OBJ;
@@ -479,4 +479,13 @@ core(SLEEP,1) l_sleep(obj_t *t)
 	else if (t->type==INTEGER)
 		usleep((int)t->car*1000000);
 	return NIL;
+}
+core(READ-LINE,1) readline(obj_t *bufsize)
+{
+	if (bufsize->type!=INTEGER)
+		return &ERROR_OBJ;
+	char *buf=calloc(bufsize->car+1,1);
+	fgets(buf,bufsize->car,stdin);
+	buf[strlen(buf)-1]='\0'; // Remove newline
+	return new_obj(SYMBOL,(long)buf,1);
 }
