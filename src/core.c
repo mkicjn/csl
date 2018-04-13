@@ -455,3 +455,28 @@ core(SYMCONC,2) symconc(obj_t *sym1,obj_t *sym2)
 	strcat(s,str2);
 	return new_obj(SYMBOL,(long)s,sym1->cdr||sym2->cdr);
 }
+core(KEY,0) key()
+{
+	struct termios term;
+	tcgetattr(0,&term);
+	term.c_lflag&=~(ICANON|ECHO);
+	tcsetattr(0,TCSANOW,&term);
+	printf("\e[?25l");
+	obj_t *o=new_obj(INTEGER,fgetc(stdin),0);
+	printf("\e[?25h");
+	term.c_lflag|=(ICANON|ECHO);
+	tcsetattr(0,TCSANOW,&term);
+	return o;
+}
+core(SLEEP,1) l_sleep(obj_t *t)
+{
+	if (t->type!=DOUBLE&&t->type!=INTEGER)
+		return &ERROR_OBJ;
+	if (t->car<0)
+		return &ERROR_OBJ;
+	if (t->type==DOUBLE)
+		usleep((int)((dobj_t *)t)->car*1000000);
+	else if (t->type==INTEGER)
+		usleep((int)t->car*1000000);
+	return NIL;
+}

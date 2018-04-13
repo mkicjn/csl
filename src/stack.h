@@ -8,7 +8,7 @@ void push(obj_t *);
 obj_t *pop();
 void swap();
 void pick(int);
-void dup();
+void dupe();
 void over();
 void nip();
 void ndrop(int);

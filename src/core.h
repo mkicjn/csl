@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <termios.h>
 #include "consts.h"
 #include "memman.h"
 #include "reader.h"
@@ -54,4 +56,6 @@ core(FILE_OUT,2) file_out(obj_t *,obj_t *);
 core(NTHCDR,2) nthcdr(obj_t *,obj_t *);
 core(SYSTEM,1) l_system(obj_t *);
 core(SYMCONC,2) symconc(obj_t *,obj_t *);
+core(KEY,0) key();
+core(SLEEP,1) l_sleep(obj_t *);
 #endif

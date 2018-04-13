@@ -207,12 +207,10 @@ obj_t *to_splice(char *str)
 		return NIL;
 	int len=strlen(tok);
 	obj_t *f=s?&append_fun:&cons_fun,*o;
-	if (infer_type(tok)==CELL&&!u) {
+	if (infer_type(tok)==CELL&&!u&&!s) {
 		o=to_splice(tok+1);
 		u=true;
-	} else if (bq)
-		o=to_splice(tok+1);
-	else
+	} else
 		o=to_obj(tok);
 	if (q)
 		o=quote(o);

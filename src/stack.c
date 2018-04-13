@@ -25,7 +25,7 @@ void pick(int n)
 {
 	push(l_stack[s_index-n]);
 }
-void dup()
+void dupe()
 {
 	push(l_stack[s_index]);
 }
