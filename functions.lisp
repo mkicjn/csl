@@ -19,7 +19,7 @@
   	~ Macros ~
   (define 'letl (lambda '(p) '(cond (p (cons `(define :(car (car p)) :(car (cdr (car p)))) (@ (cdr p)))))))
   (declare 'let (lambda '(p) (quote `(progn \(letl p)))))
-  (declare 'defun (lambda '(s a b) (quote `(declare :`(quote :s) :`(lambda :`(quote :a) :`(quote :b))))))
+  (declare 'defun (lambda variadic (quote `(declare (quote :(car argv)) (lambda (quote :(car (cdr argv))) (quote (progn \(cdr (cdr argv)))))))))
   (declare 'apply (lambda '(f a) (quote `(:f \a))))
   (declare 'funcall (lambda variadic (quote `(:(car argv) \(cdr argv)))))
   (declare 'dotimes (lambda '(n f) (quote `(progn \(ntimes n f)))))
