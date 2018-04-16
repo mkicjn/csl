@@ -5,6 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <termios.h>
+#include <time.h>
 #include "consts.h"
 #include "memman.h"
 #include "reader.h"
@@ -59,4 +60,6 @@ core(SYMCONC,2) symconc(obj_t *,obj_t *);
 core(KEY,0) key();
 core(SLEEP,1) l_sleep(obj_t *);
 core(READ-LINE,1) readline(obj_t *);
+core(TICK,0) tick();
+core(TOCK,0) tock();
 #endif

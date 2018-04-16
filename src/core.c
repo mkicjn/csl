@@ -489,3 +489,16 @@ core(READ-LINE,1) readline(obj_t *bufsize)
 	buf[strlen(buf)-1]='\0'; // Remove newline
 	return new_obj(SYMBOL,(long)buf,1);
 }
+static struct timespec start;
+core(TICK,0) tick()
+{
+	clock_gettime(CLOCK_MONOTONIC,&start);
+	return T;
+}
+core(TOCK,0) tock()
+{
+	struct timespec end;
+	clock_gettime(CLOCK_MONOTONIC,&end);
+	double d=end.tv_sec-start.tv_sec+(end.tv_nsec-start.tv_nsec)/1e9;
+	return (obj_t *)new_dobj(d);
+}
