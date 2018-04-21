@@ -61,6 +61,8 @@ Scripts can also start with a shebang (i.e. `#!/usr/local/bin/csl`) and be marke
 * The arithmetic operators are not variadic, but can easily be redefined to be variadic
   * e.g. ``(declare '+ (lambda variadic `(:(lambda '(l) `(cond (l (:+ (car l) (@ (cdr l)))) (t 0))) argv)))``
   * Note in the above example that splices can be used to insert pre-compiled functions into function bodies so that they do not get recompiled with every call to the function.
+* The `go` special form returns execution to the place right after its argument was last seen in the compiled function body.
+  * e.g. `(declare 'f (lambda '(n) '(progn (define 'i 1) 'printing: (print i) (set i (+ i 1)) (terpri) (cond ((< i n) (go 'printing:))))))` will print every integer from one up to its argument (minus one) without using recursion.
 
 ##### "Fun" facts:
 * This project was originally written in x64 assembly but was not garbage collected. In fact, it was my second real project in assembly, and was the proving ground for teaching myself assembly.
