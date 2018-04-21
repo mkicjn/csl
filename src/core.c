@@ -29,6 +29,10 @@ core(PRINT,1) print(obj_t *obj)
 }
 void print_obj(obj_t *obj,FILE *fh,bool q)
 {
+	if (!obj) {
+		fprintf(fh,"NULL");
+		return;
+	}
 	switch (obj->type) {
 	case CELL:
 		print_cell(obj,fh,q);
@@ -341,6 +345,13 @@ void do_body(obj_t **b,long size)
 		obj_t *obj=b[i];
 		if (obj==&ARGS) {
 			push(&ARGS);
+		} else if (obj==GO) {
+			nip(); // Remove <ARGS>
+			obj_t *s=pop();
+			i-=2;
+			for (;i>2&&eq(b[i],s)!=T;i--);
+			i++;
+			dec_rc(s);
 		} else if (obj==&CALL) {
 			obj_t *f=pop();
 			push(funcall(f));
@@ -348,19 +359,30 @@ void do_body(obj_t **b,long size)
 			nip(); // Remove <ARGS>
 		} else if (obj==&DROP) {
 			dec_rc(pop());
+		} else if (obj==&COND_BEGIN) {
+			continue;
 		} else if (obj==&COND_END) {
 			push(NIL);
 		} else if (obj==&COND_DO) {
 			obj_t *o=pop();
-			i++;
-			if (o!=NIL) {
-				do_body((obj_t **)b[i]->car,b[i]->cdr);
-				for (;b[i]!=&COND_END;i++);
+			if (o==NIL) {
+				i++;
+				int c=1;
+				for (;c!=1||b[i]!=&COND_DONE;i++) {
+					c+=b[i]==&COND_BEGIN;
+					c-=b[i]==&COND_END;
+				}
 			}
 			dec_rc(o);
+		} else if (obj==&COND_DONE) {
+			int c=1;
+			for (;c>0;i++) {
+				c+=b[i]==&COND_BEGIN;
+				c-=b[i]==&COND_END;
+			}
+			i--;
 		} else if (obj==QUOTE) {
-			push(b[i+1]);
-			i++;
+			push(b[++i]);
 		} else
 			push(symval(obj));
 	}

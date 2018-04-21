@@ -175,6 +175,7 @@ obj_t *to_obj(char *s)
 		CATCH_CONST(PROGN)
 		CATCH_CONST(COND)
 		CATCH_CONST(VARIADIC)
+		CATCH_CONST(GO)
 		// Don't catch ARGV
 		else if (tok[0]=='@'&&!tok[1]) // CATCH_CONST(@)
 			obj=RECURSE;

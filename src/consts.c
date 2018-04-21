@@ -8,13 +8,16 @@ NEW_CONSTANT(PROGN);
 NEW_CONSTANT(COND);
 NEW_CONSTANT(VARIADIC);
 NEW_CONSTANT(ARGV);
+NEW_CONSTANT(GO);
 // Constants normally unavailable to language
 // (These require the address operator as distinction)
 obj_t ARGS=CONSTANT(<ARGS>); // Exists so special forms know where their arguments end
 obj_t ERROR_OBJ=CONSTANT(ERROR);
 obj_t CALL=CONSTANT(<CALL>); // Exists to tell `funcall` when to call vs. push a function
 obj_t DROP=CONSTANT(<DROP>); // Used in `progn` to discard form evaluations
+obj_t COND_BEGIN=CONSTANT(<COND_BEGIN>);
 obj_t COND_DO=CONSTANT(<COND_DO>);
+obj_t COND_DONE=CONSTANT(<COND_DONE>);
 obj_t COND_END=CONSTANT(<COND_END>);
 // Type symbols (i.e. type's return values)
 obj_t INTEGER_OBJ=CONSTANT(INTEGER);

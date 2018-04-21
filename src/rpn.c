@@ -46,10 +46,12 @@ obj_t *t_progn(obj_t *form) // "Translate progn"
 obj_t *t_cond(obj_t *form) // "Translate cond"
 {
 	push(NULL);
-	for (obj_t *l=cdr(form);l!=NIL;l=cdr(l)) {
-		push(rpn(car(car(l))));
+	push(cons(&COND_BEGIN,NIL));
+	for (obj_t *f=cdr(form);f!=NIL;f=cdr(f)) {
+		push(rpn(car(car(f))));
 		push(cons(&COND_DO,NIL));
-		push(cons(lambda(NIL,car(cdr(car(l)))),NIL));
+		push(rpn(car(cdr(car(f)))));
+		push(cons(&COND_DONE,NIL));
 	}
 	push(cons(&COND_END,NIL));
 	while (stackitem(1))

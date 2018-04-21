@@ -21,12 +21,15 @@ extern obj_t *PROGN;
 extern obj_t *COND;
 extern obj_t *VARIADIC;
 extern obj_t *ARGV;
+extern obj_t *GO;
 // Normally unavailable
 extern obj_t ERROR_OBJ;
 extern obj_t ARGS;
 extern obj_t CALL;
 extern obj_t DROP;
+extern obj_t COND_BEGIN;
 extern obj_t COND_DO;
+extern obj_t COND_DONE;
 extern obj_t COND_END;
 extern obj_t *DICT;
 // Type symbols
