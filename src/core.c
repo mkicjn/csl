@@ -343,6 +343,7 @@ void do_body(obj_t **b,long size)
 {
 	for (int i=2;i<size;i++) { // TODO: Abstract
 		obj_t *obj=b[i];
+		DEBUG(printf("do_body %d: ",i); output(obj); terpri();)
 		if (obj==&ARGS) {
 			push(&ARGS);
 		} else if (obj==GO) {
@@ -369,14 +370,17 @@ void do_body(obj_t **b,long size)
 				i++;
 				int c=1;
 				for (;c!=1||b[i]!=&COND_DONE;i++) {
+					DEBUG(printf("skipping %d: ",i); output(b[i]); terpri();)
 					c+=b[i]==&COND_BEGIN;
 					c-=b[i]==&COND_END;
 				}
 			}
 			dec_rc(o);
 		} else if (obj==&COND_DONE) {
+			i++;
 			int c=1;
 			for (;c>0;i++) {
+				DEBUG(printf("skipping %d: ",i); output(b[i]); terpri();)
 				c+=b[i]==&COND_BEGIN;
 				c-=b[i]==&COND_END;
 			}
