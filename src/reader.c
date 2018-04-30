@@ -182,7 +182,6 @@ obj_t *to_obj(char *s)
 		else
 			obj=new_obj(SYMBOL,(long)tok,qm);
 		return q?quote(obj):obj;
-		break;
 	case INTEGER:
 		obj=new_obj(INTEGER,atol(tok),0);
 		break;

@@ -13,8 +13,10 @@
 #define TRY \
 if (false);
 #define CATCH_CONST(x) \
-else if (!strcasecmp(tok,#x)) \
-	obj=x;
+else if (!strcasecmp(tok,#x)) { \
+	obj=x; \
+	free(tok); \
+}
 char *ltrim(char *);
 bool valid_list(char *);
 type_t infer_type(char *);
