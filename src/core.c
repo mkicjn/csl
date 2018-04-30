@@ -528,3 +528,21 @@ core(TOCK,0) tock()
 	double d=end.tv_sec-start.tv_sec+(end.tv_nsec-start.tv_nsec)/1e9;
 	return (obj_t *)new_dobj(d);
 }
+obj_t *reassoc(obj_t *sym,obj_t *val,obj_t *env)
+{ // "Reassociate" symbol in association list
+	if (sym->type!=SYMBOL)
+		return &ERROR_OBJ;
+	obj_t *def=assoc(sym,env);
+	if (def==&ERROR_OBJ||def==NIL)
+		return &ERROR_OBJ;
+	rplacd(def,val);
+	return sym;
+}
+core(REDECLARE,2) redeclare(obj_t *sym,obj_t *val)
+{
+	return reassoc(sym,val,DICT);
+}
+core(REDEFINE,2) redefine(obj_t *sym,obj_t *val)
+{
+	return reassoc(sym,val,ENV);
+}

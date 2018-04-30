@@ -62,4 +62,7 @@ core(SLEEP,1) l_sleep(obj_t *);
 core(READ-LINE,1) readline(obj_t *);
 core(TICK,0) tick();
 core(TOCK,0) tock();
+obj_t *reassoc(obj_t *,obj_t *,obj_t *);
+core(REDECLARE,2) redeclare(obj_t *,obj_t *);
+core(REDEFINE,2) redefine(obj_t *,obj_t *);
 #endif
