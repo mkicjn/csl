@@ -16,7 +16,7 @@ for (@ARGV) {
 	print $dicth "#include \"$_\"\n";
 	open(my $file,'<',"src/$_") or die "src/$_ does not exist\n";
 	while (my $line = <$file>) {
-		my ($lname,$argc,$cname)=($line=~/core\((.*),([0-9]+)\) ([^(]+)/g) or next;
+		my ($lname,$argc,$cname)=($line=~/^core\((.*),([0-9]+)\) ([^(]+)/g) or next;
 		print $dicth "void s_",lc $cname,"();\n";
 		print $dictc "void s_",lc $cname,"()\n{\n";
 		print $dictc "\tobj_t *$_=pop();\n" for (@alphabet[0..$argc-1]);

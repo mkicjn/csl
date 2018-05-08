@@ -9,6 +9,12 @@ NEW_CONSTANT(COND);
 NEW_CONSTANT(VARIADIC);
 NEW_CONSTANT(ARGV);
 NEW_CONSTANT(GO);
+dobj_t PI_OBJ={
+	.type=DOUBLE,
+	.car=M_PI,
+	.refs=-1
+};
+obj_t *PI=(obj_t *)&PI_OBJ;
 // Constants normally unavailable to language
 // (These require the address operator as distinction)
 obj_t ARGS=CONSTANT(<ARGS>); // Exists so special forms know where their arguments end

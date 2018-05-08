@@ -1,5 +1,6 @@
 #ifndef CONSTS_H
 #define CONSTS_H
+#include <math.h>
 #include "types.h"
 #define CONSTANT(x) \
 { \
@@ -22,6 +23,7 @@ extern obj_t *COND;
 extern obj_t *VARIADIC;
 extern obj_t *ARGV;
 extern obj_t *GO;
+extern obj_t *PI;
 // Normally unavailable
 extern obj_t ERROR_OBJ;
 extern obj_t ARGS;
