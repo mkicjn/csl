@@ -323,8 +323,7 @@ obj_t *funcall(obj_t *func)
 	if (func->type!=FUNCTION)
 		return &ERROR_OBJ;
 	if (func->refs<0) {
-		void (*cf)()=(void *)func->car;
-		cf();
+		((void (*)())func->car)();
 		goto RETURN_TOS;
 	}
 	obj_t **f=(obj_t **)func->car;
@@ -487,9 +486,9 @@ core(KEY,0) key()
 	tcgetattr(0,&term);
 	term.c_lflag&=~(ICANON|ECHO);
 	tcsetattr(0,TCSANOW,&term);
-	printf("\e[?25l");
+	printf("\x1B[?25l");
 	obj_t *o=new_obj(INTEGER,fgetc(stdin),0);
-	printf("\e[?25h");
+	printf("\x1B[?25h");
 	term.c_lflag|=(ICANON|ECHO);
 	tcsetattr(0,TCSANOW,&term);
 	return o;

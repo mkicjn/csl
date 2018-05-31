@@ -103,9 +103,9 @@ core(EXPT,2) expt(obj_t *a,obj_t *b)
 		return new_dobj(pow(dub(a),dub(b)));
 	return new_obj(INTEGER,floor(pow(a->car,b->car)),0);
 }
-CMATH(SQRT,sqrt);
-CMATH(LOG,log);
-CMATH(EXP,exp);
-CMATH(SIN,sin);
-CMATH(COS,cos);
-CMATH(TAN,tan);
+CMATH(SQRT,sqrt)
+CMATH(LOG,log)
+CMATH(EXP,exp)
+CMATH(SIN,sin)
+CMATH(COS,cos)
+CMATH(TAN,tan)

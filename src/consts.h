@@ -8,9 +8,9 @@
 	.car=(long)#x, \
 	.cdr=0, \
 	.refs=-1 \
-}
+};
 #define NEW_CONSTANT(x) \
-obj_t x##_OBJ=CONSTANT(x); \
+obj_t x##_OBJ=CONSTANT(x) \
 obj_t *x=&x##_OBJ;
 // Directly available
 extern obj_t NIL_OBJ;
