@@ -213,7 +213,7 @@ obj_t *to_splice(char *str)
 	if (!tok)
 		return NIL;
 	int len=strlen(tok);
-	obj_t *f=s?&append_fun:&cons_fun,*o;
+	obj_t *f=s?&nconc_fun:&cons_fun,*o;
 	if (infer_type(tok)==CELL&&!u&&!s) {
 		o=to_splice(tok+1);
 		u=true;
