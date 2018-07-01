@@ -11,6 +11,7 @@
 #include "reader.h"
 #include "rpn.h"
 #include "stack.h"
+#include "timer.h"
 #include "types.h"
 #include "debug.h"
 core(CAR,1) car(obj_t *);
