@@ -16,6 +16,7 @@
   (declare 'sum (lambda variadic '(reduce + argv)))
   (declare 'ntimes (lambda '(n f) '(cond ((> n 0) `(:f \(@ (- n 1) f))))))
   (declare 'flatten (lambda '(l) '(cond ((null l) nil) ((atom l) (list l)) (t (nconc (@ (car l)) (@ (cdr l)))))))
+  (declare 'zip (lambda '(a b) '(cond ((or (null a) (null b)) nil) (t (cons (cons (car a) (car b)) (@ (cdr a) (cdr b)))))))
 
   	~ Macros ~
   (define 'letl (lambda '(p) '(cond (p (cons `(define :(car (car p)) :(car (cdr (car p)))) (@ (cdr p)))))))
