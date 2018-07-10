@@ -178,9 +178,10 @@ obj_t *to_obj(char *s)
 		CATCH_CONST(GO)
 		CATCH_CONST(PI)
 		// Don't catch ARGV
-		else if (tok[0]=='@'&&!tok[1]) // CATCH_CONST(@)
+		else if (tok[0]=='@'&&!tok[1]) { // CATCH_CONST(@)
 			obj=RECURSE;
-		else
+			free(tok);
+		} else
 			obj=new_obj(SYMBOL,(long)tok,qm);
 		return q?quote(obj):obj;
 	case INTEGER:
