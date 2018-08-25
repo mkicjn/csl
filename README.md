@@ -1,4 +1,4 @@
-## My name is Mark Johnson, and I referenced this work in my Entry-to-a-Major application at Texas A&M University. This note is intended to prove my ownership of the project to any faculty who see it.
+## This project is outdated. See [ISPL](../../../ispl)
 
 # csl
 An amateur LISP dialect with a stack-based bytecode compiler/interpreter based on translation to RPN
